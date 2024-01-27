@@ -6,12 +6,22 @@ let docDefinition;
 
 
 // Input variables
-let answers = [];
 let container;
-let LPAinput;
 let submit;
-let LPA;
-let clientName = 'Jane Smith';
+let LPA = { q: 'Land Planning Authority:', id: 'lpa', a: '' };
+let postcode = { q: "Postcode:", id: "pc", a: '' };
+let accountManager = { q: "Account Manager:", id: "am", a: '' };
+let projectPartner = { q: "Project Partner:", id: 'pPartner', a: '' };
+let landOwner = { q: "Land Owner:", id: "lo", a: '' };
+let acreage = { q: "Acreage:", id: "acres", a: '' };
+let acquisitionOfLand = { q: "Acquisition of Land:", id: "aol", a: '' };
+let yearOfAcquisition = { q: "Year of Acquisition:", id: "yoa", a: '' };
+let currentLandUse = { q: "Current Land Use:", id: "clu", a: '' };
+let reasonForDiversification = { q: "Reason For Diversification:", id: "rfd", a: '' };
+let proposedProject = { q: "Proposed Project:", id: "pp", a: '' };
+let income = { q: "Income:", id: "income", a: "" };
+let expenditure = { q: "Expenditure:", id: "exp", a: "" };
+let landOwnerIncome = { q: "Land Owner Income:", id: "loi", a: "" };
 
 pdfMake.fonts = {
     helvetica: {
@@ -46,7 +56,7 @@ function UpdateDoc() {
                 margin: [0, vh / 4, 0, 60]
             },
             {
-                text: answers[0],
+                text: LPA.a,
                 // text: 'test test',
                 style: 'h1',
                 alignment: 'center',
@@ -54,7 +64,7 @@ function UpdateDoc() {
                 margin: [0, 0, 0, 0]
             },
             {
-                text: answers[1],
+                text: postcode.a,
                 style: 'h1',
                 alignment: 'center',
                 bold: false
@@ -66,7 +76,7 @@ function UpdateDoc() {
                 margin: [0, 0, 0, 0]
             },
             {
-                text: '{{Account Manager}}',
+                text: accountManager.a,
                 style: 'body',
                 alignment: 'center',
                 margin: [0, 0, 0, 0]
@@ -137,19 +147,19 @@ function UpdateDoc() {
                     // 	return (row + 1)+20;
                     // },
                     body: [
-                        [{ bold: true, text: 'Land Owner' }, clientName],
-                        [{ bold: true, text: 'Acreage' }, '{{acreage}}'],
-                        [{ bold: true, text: 'Land Planning Authority' }, '{{LPA}}'],
-                        [{ bold: true, text: 'Acquisition of Land' }, '{{acquisition of land}}'],
-                        [{ bold: true, text: 'Year of Acquisition' }, '{{year of acquisition}}'],
-                        [{ bold: true, text: 'Current Land Use' }, '{{current land use}}'],
-                        [{ bold: true, text: 'Reason for Diversification' }, '{{reason for diversification}}'],
-                        [{ bold: true, text: 'Proposed Project' }, 'Proposed Project']
+                        [{ bold: true, text: 'Land Owner' }, landOwner.a],
+                        [{ bold: true, text: 'Acreage' }, acreage.a],
+                        [{ bold: true, text: 'Land Planning Authority' }, LPA.a],
+                        [{ bold: true, text: 'Acquisition of Land' }, acquisitionOfLand.a],
+                        [{ bold: true, text: 'Year of Acquisition' }, yearOfAcquisition.a],
+                        [{ bold: true, text: 'Current Land Use' }, currentLandUse.a],
+                        [{ bold: true, text: 'Reason for Diversification' }, reasonForDiversification.a],
+                        [{ bold: true, text: 'Proposed Project' }, proposedProject.a]
                     ]
                 }
             },
             {
-                text: 'This report is a personalised review of your submitted '+ answers[4] + ' acres in '+ answers[0] + ', ' + answers[1] + ". Our project partner, {{ Project Partner }}, has analysed and evaluated your land's potential within {{Proposed Project }}. The report is a guide for potential diversification, and all figures/strategiesshould be taken as estimations. Below is my brief summary on the project.",
+                text: 'This report is a personalised review of your submitted ' + acreage.a + ' acres in ' + LPA.a + ', ' + postcode.a + ". Our project partner, " + projectPartner.a + ", has analysed and evaluated your land's potential within " + proposedProject.a + ". The report is a guide for potential diversification, and all figures/strategies should be taken as estimations. Below is my brief summary on the project.",
                 style: 'body'
             },
             {
@@ -168,9 +178,9 @@ function UpdateDoc() {
                     // 	return (row + 1)+20;
                     // },
                     body: [
-                        ['Total Project Income', '{{income}}'],
-                        ['Total Project Cost', '{{expenditure}}'],
-                        ['Land Owner Income', '{{land owner income}}'],
+                        [{ bold: true, text:'Total Project Income'}, income.a],
+                        [{ bold: true, text:'Total Project Cost'}, expenditure.a],
+                        [{ bold: true, text:'Land Owner Income'}, landOwnerIncome.a],
                     ]
                 }
             },
@@ -218,36 +228,27 @@ function setup() {
     container.position(0, 0);
     container.style('width', '100%');
     container.style('padding: 40px');
-    container.style('background-color: gray');
-    container.style('display: block');
+    container.style('background-color: #f2f2f2');
+    // container.style('display: block');
 
 
-    Title('Prototype Report Input');
-    Label('LPA:');
-    Input();
-    Label('Postcode:');
-    Input();
-    Label('Account Manager:');
-    Input();
-    Label('Land Owner:');
-    Input();
-    Label('Acreage');
-    Input();
-    Label('Land Planning Authority');
-    Input();
-    Label('Acquistion of Land');
-    Input();
-    Label('Year of Acquisition:');
-    Input();
-    Label('Current Land Use:');
-    Input();
-    Label('Reason for Diversification:');
-    Input();
-    Label('Proposed Project:');
-    Input();
-    
+    Title('Report Prototype');
+    Input(LPA.q, LPA.id);
+    Input(postcode.q, postcode.id);
+    Input(accountManager.q, accountManager.id);
+    Input(projectPartner.q, projectPartner.id);
+    Input(landOwner.q, landOwner.id);
+    Input(acreage.q, acreage.id);
+    Input(acquisitionOfLand.q, acquisitionOfLand.id);
+    Input(yearOfAcquisition.q, yearOfAcquisition.id);
+    Input(currentLandUse.q, currentLandUse.id);
+    Input(reasonForDiversification.q, reasonForDiversification.id);
+    Input(proposedProject.q, proposedProject.id);
+    Input(income.q, income.id);
+    Input(expenditure.q, expenditure.id);
+    Input(landOwnerIncome.q, landOwnerIncome.id);
 
-    submit = createButton('create PDF');
+    submit = createButton('Create PDF');
     submit.parent(container);
     submit.style('padding', '10px');
     submit.style('margin-top', '30px');
@@ -255,7 +256,7 @@ function setup() {
     submit.mouseReleased(CreateDocument);
 
     // setInterval(() => {
-    //     console.log(answers)
+    //     console.log(LPA.a)
     // }, 500);
 }
 
@@ -264,38 +265,59 @@ function Title(text) {
     t.parent(container);
     t.style('font-family', 'sans-serif');
     t.style('margin-bottom', '60px');
+    t.style('width', '100%');
 }
 
-function Label(text) {
-    let p = createP(text);
-    p.parent(container);
-    p.style('margin-bottom', '4px');
-    p.style('font-family', 'sans-serif');
-}
+function Input(text, id) {
+    let l = createElement('label', text).attribute('for', id);
+    l.parent(container);
+    l.style('margin-bottom', '4px');
+    l.style('font-family', 'sans-serif');
+    l.style('display', 'block');
 
-function Input(variable, value) {
-    variable = createInput('').addClass('answers');
-    variable.parent(container);
-    variable.style('margin-bottom', '12px');
-    variable.style('padding', '8px');
-    variable.style('width', '250px');
-    // variable.input(() => {
-    //     value = variable.value();
-    //     // console.log(value, LPA)
+    let b = createInput('').id(id)
+    b.parent(container);
+    b.style('margin-bottom', '40px');
+    b.style('padding', '8px');
+    b.style('width', '40%');
+    // b.input(() => {
+    // UpdateValues();
+    // console.log(b.value());
     // });
-    // value = variable.value();
-    // return value;
 }
+
+
 
 function UpdateValues() {
-    // reset array
-    answers = [];
+    LPA.a = Answer(LPA.id);
+    postcode.a = Answer(postcode.id)
+    accountManager.a = Answer(accountManager.id);
+    projectPartner.a = Answer(projectPartner.id);
+    landOwner.a = Answer(landOwner.id);
+    acreage.a = Answer(acreage.id);
+    acquisitionOfLand.a = Answer(acquisitionOfLand.id);
+    yearOfAcquisition.a = Answer(yearOfAcquisition.id);
+    currentLandUse.a = Answer(currentLandUse.id);
+    reasonForDiversification.a = Answer(reasonForDiversification.id);
+    proposedProject.a = Answer(proposedProject.id);
+    income.a = Answer(income.id);
+    expenditure.a = Answer(expenditure.id);
+    landOwnerIncome.a = Answer(landOwnerIncome.id);
 
-    // select all values from the inputs and add to array
-    let a = selectAll('.answers')
-    for (let i = 0; i < a.length; i++) {
-        answers.push(a[i].value())
+    function Answer(id) {
+        let answer = select('#' + id);
+        return answer.value();
     }
-    // LPA = Input(LPAinput)
-    // console.log(LPA);
+
+
+    //     // reset array
+    //     // answers = [];
+
+    //     // select all values from the inputs and add to array
+    //     // let a = selectAll('.answers')
+    //     // for (let i = 0; i < a.length; i++) {
+    //     //     answers.push(a[i].value())
+    //     // }
+    //     // LPA = Input(LPAinput)
+    //     // console.log(LPA);
 }
