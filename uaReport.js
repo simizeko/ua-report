@@ -178,9 +178,9 @@ function UpdateDoc() {
                     // 	return (row + 1)+20;
                     // },
                     body: [
-                        [{ bold: true, text:'Total Project Income'}, income.a],
-                        [{ bold: true, text:'Total Project Cost'}, expenditure.a],
-                        [{ bold: true, text:'Land Owner Income'}, landOwnerIncome.a],
+                        [{ bold: true, text: 'Total Project Income' }, income.a],
+                        [{ bold: true, text: 'Total Project Cost' }, expenditure.a],
+                        [{ bold: true, text: 'Land Owner Income' }, landOwnerIncome.a],
                     ]
                 }
             },
@@ -279,7 +279,9 @@ function Input(text, id) {
     b.parent(container);
     b.style('margin-bottom', '40px');
     b.style('padding', '8px');
-    b.style('width', '40%');
+    // b.style('width', '40%');
+    b.style('width', '250px');
+    b.value('{{' + id + '}}')
     // b.input(() => {
     // UpdateValues();
     // console.log(b.value());
