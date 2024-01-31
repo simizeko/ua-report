@@ -4,7 +4,6 @@ let vh = 841.89;
 let padding = vh / 6;
 let docDefinition;
 
-
 // Input variables
 let container;
 let submit;
@@ -94,7 +93,9 @@ function UpdateDoc() {
                 alignment: 'center',
                 pageBreak: 'after'
             },
-            // Executive Summary
+
+            /////////////////////////////
+            // PAGE 1
             {
                 text: 'Executive Summary',
                 style: 'title'
@@ -163,12 +164,13 @@ function UpdateDoc() {
                 style: 'body'
             },
             {
-                text: 'Finicial Summary',
+                text: 'Financial Summary',
                 style: 'h2'
             },
             {
                 layout: 'lightHorizontalLines', // optional
                 style: 'body',
+                pageBreak: 'after',
                 table: {
                     // headers are automatically repeated if the table spans over multiple pages
                     // you can declare how many rows should be treated as headers
@@ -182,6 +184,62 @@ function UpdateDoc() {
                         [{ bold: true, text: 'Total Project Cost' }, expenditure.a],
                         [{ bold: true, text: 'Land Owner Income' }, landOwnerIncome.a],
                     ]
+                }
+            },
+
+            /////////////////////////////
+            // PAGE 2
+            {
+                text: 'Project Outline',
+                style: 'title'
+            },
+            {
+                style: 'body',
+                table: {
+                    // headers are automatically repeated if the table spans over multiple pages
+                    // you can declare how many rows should be treated as headers
+                    headerRows: 0,
+                    widths: ['auto', '*'],
+                    // heights: function (row) {
+                    // 	return (row + 1)+20;
+                    // },
+                    body: [
+                        tableFill('Report', 'Desk survey and ecological forecasting.'),
+                        tableFill('Site Visit', 'Discussion of the BNG strategy and NDA.'),
+                        tableFill('Legals', 'Signing and negotiating of all legal documents.'),
+                        tableFill('Sell Units', 'Marketing of site to appropriate developers seeking planning.'),
+                        tableFill('Trigger Lease', 'The 33 year lease begins and all parties get paid.'),
+                        tableFill('Manage and Monitor', 'Habitats created and the monitoring and management of the site begins.')
+                        // [{ fillColor: '#CCCCCC', bold: true, text: 'Report' }, {fillColor: '#d1d1d1', text:'Desk survey and ecological forecasting'}],
+                    ]
+                },
+                layout: {
+                    hLineWidth: function hLineWidth(i, node) {
+                        return 1
+                    },
+                    vLineWidth: function vLineWidth(i) {
+                        return 0;
+                    },
+                    hLineColor: function hLineColor(i) {
+                        //   return i === 1 ? 'black' : '#aaa';
+                        return '#ffffff'
+                    },
+                    paddingLeft: function paddingLeft(i) {
+                        //   return i === 0 ? 0 : 8;
+                        return 16
+                    },
+                    paddingRight: function paddingRight(i, node) {
+                        //   return i === node.table.widths.length - 1 ? 0 : 8;
+                        return 16
+                    },
+                    paddingTop: function paddingTop(i, node) {
+                        //   return i === node.table.widths.length - 1 ? 0 : 8;
+                        return 16
+                    },
+                    paddingBottom: function paddingBottom(i, node) {
+                        //   return i === node.table.widths.length - 1 ? 0 : 8;
+                        return 8
+                    }
                 }
             },
         ],
@@ -226,7 +284,7 @@ function CreateDocument() {
 function setup() {
     container = createDiv('');
     container.position(0, 0);
-    container.style('width', '100%');
+    container.style('width', '100vw');
     container.style('padding: 40px');
     container.style('background-color: #f2f2f2');
     // container.style('display: block');
@@ -322,4 +380,9 @@ function UpdateValues() {
     //     // }
     //     // LPA = Input(LPAinput)
     //     // console.log(LPA);
+}
+
+function tableFill(column1, column2) {
+    let t = [{ fillColor: '#b3b3b3', bold: true, text: column1 }, { fillColor: '#e6e6e6', text: column2 }]
+    return t
 }
