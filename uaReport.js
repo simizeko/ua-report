@@ -189,59 +189,63 @@ function UpdateDoc() {
 
             /////////////////////////////
             // PAGE 2
-            {
-                text: 'Project Outline',
-                style: 'title'
-            },
-            {
-                style: 'body',
-                table: {
-                    // headers are automatically repeated if the table spans over multiple pages
-                    // you can declare how many rows should be treated as headers
-                    headerRows: 0,
-                    widths: ['auto', '*'],
-                    // heights: function (row) {
-                    // 	return (row + 1)+20;
-                    // },
-                    body: [
-                        tableFill('Report', 'Desk survey and ecological forecasting.'),
-                        tableFill('Site Visit', 'Discussion of the BNG strategy and NDA.'),
-                        tableFill('Legals', 'Signing and negotiating of all legal documents.'),
-                        tableFill('Sell Units', 'Marketing of site to appropriate developers seeking planning.'),
-                        tableFill('Trigger Lease', 'The 33 year lease begins and all parties get paid.'),
-                        tableFill('Manage and Monitor', 'Habitats created and the monitoring and management of the site begins.')
-                        // [{ fillColor: '#CCCCCC', bold: true, text: 'Report' }, {fillColor: '#d1d1d1', text:'Desk survey and ecological forecasting'}],
-                    ]
-                },
-                layout: {
-                    hLineWidth: function hLineWidth(i, node) {
-                        return 1
-                    },
-                    vLineWidth: function vLineWidth(i) {
-                        return 0;
-                    },
-                    hLineColor: function hLineColor(i) {
-                        //   return i === 1 ? 'black' : '#aaa';
-                        return '#ffffff'
-                    },
-                    paddingLeft: function paddingLeft(i) {
-                        //   return i === 0 ? 0 : 8;
-                        return 16
-                    },
-                    paddingRight: function paddingRight(i, node) {
-                        //   return i === node.table.widths.length - 1 ? 0 : 8;
-                        return 16
-                    },
-                    paddingTop: function paddingTop(i, node) {
-                        //   return i === node.table.widths.length - 1 ? 0 : 8;
-                        return 16
-                    },
-                    paddingBottom: function paddingBottom(i, node) {
-                        //   return i === node.table.widths.length - 1 ? 0 : 8;
-                        return 8
-                    }
-                }
-            },
+            Title('Project Outline'),
+            twoColumn('Report', 'Desk survey and ecological forecasting.'),
+            twoColumn('Site Visit', 'Discussion of the BNG strategy and NDA.'),
+            twoColumn('Legals', 'Signing and negotiating of all legal documents.'),
+            twoColumn('Sell Units', 'Marketing of site to appropriate developers seeking planning.'),
+            twoColumn('Trigger Lease', 'The 33 year lease begins and all parties get paid.'),
+            twoColumn('Manage and Monitor', 'Habitats created and the monitoring and management of the site begins.', '#d4682f')
+
+            // {
+            //     style: 'body',
+            //     table: {
+            //         // headers are automatically repeated if the table spans over multiple pages
+            //         // you can declare how many rows should be treated as headers
+            //         headerRows: 0,
+            //         widths: ['auto', '*'],
+            //         // heights: function (row) {
+            //         // 	return (row + 1)+20;
+            //         // },
+            //         body: [
+            //             tableFill('Report', 'Desk survey and ecological forecasting.'),
+            //             tableFill('Site Visit', 'Discussion of the BNG strategy and NDA.'),
+            //             tableFill('Legals', 'Signing and negotiating of all legal documents.'),
+            //             tableFill('Sell Units', 'Marketing of site to appropriate developers seeking planning.'),
+            //             tableFill('Trigger Lease', 'The 33 year lease begins and all parties get paid.'),
+            //             tableFill('Manage and Monitor', 'Habitats created and the monitoring and management of the site begins.')
+            //             // [{ fillColor: '#CCCCCC', bold: true, text: 'Report' }, {fillColor: '#d1d1d1', text:'Desk survey and ecological forecasting'}],
+            //         ]
+            //     },
+            //     layout: {
+            //         hLineWidth: function hLineWidth(i, node) {
+            //             return 2
+            //         },
+            //         vLineWidth: function vLineWidth(i) {
+            //             return 0;
+            //         },
+            //         hLineColor: function hLineColor(i) {
+            //             //   return i === 1 ? 'black' : '#aaa';
+            //             return '#ffffff'
+            //         },
+            //         paddingLeft: function paddingLeft(i) {
+            //             //   return i === 0 ? 0 : 8;
+            //             return 16
+            //         },
+            //         paddingRight: function paddingRight(i, node) {
+            //             //   return i === node.table.widths.length - 1 ? 0 : 8;
+            //             return 16
+            //         },
+            //         paddingTop: function paddingTop(i, node) {
+            //             //   return i === node.table.widths.length - 1 ? 0 : 8;
+            //             return 16
+            //         },
+            //         paddingBottom: function paddingBottom(i, node) {
+            //             //   return i === node.table.widths.length - 1 ? 0 : 8;
+            //             return 8
+            //         }
+            //     }
+            // },
         ],
 
         // Base styles
@@ -385,4 +389,99 @@ function UpdateValues() {
 function tableFill(column1, column2) {
     let t = [{ fillColor: '#b3b3b3', bold: true, text: column1 }, { fillColor: '#e6e6e6', text: column2 }]
     return t
+}
+
+function Title(titleText) {
+   let t = {
+        text: titleText,
+        style: 'title'
+    }
+    return t;
+}
+
+function twoColumn(column1, column2, color) {
+    let columnWidth = 90;
+    let c;
+    if (color) {
+        c = {
+            style: 'body',
+            table: {
+                headerRows: 0,
+                widths: [columnWidth, '*'],
+                body: [
+                    [{ fillColor: color, bold: true, text: column1 }, { fillColor: color, text: column2 }]
+                    // [{ fillColor: '#CCCCCC', bold: true, text: 'Report' }, {fillColor: '#d1d1d1', text:'Desk survey and ecological forecasting'}],
+                ]
+            },
+            layout: {
+                hLineWidth: function hLineWidth(i, node) {
+                    return 0
+                },
+                vLineWidth: function vLineWidth(i) {
+                    return 0;
+                },
+                hLineColor: function hLineColor(i) {
+                    //   return i === 1 ? 'black' : '#aaa';
+                    return '#ffffff'
+                },
+                paddingLeft: function paddingLeft(i) {
+                    //   return i === 0 ? 0 : 8;
+                    return 16
+                },
+                paddingRight: function paddingRight(i, node) {
+                    //   return i === node.table.widths.length - 1 ? 0 : 8;
+                    return 16
+                },
+                paddingTop: function paddingTop(i, node) {
+                    //   return i === node.table.widths.length - 1 ? 0 : 8;
+                    return 16
+                },
+                paddingBottom: function paddingBottom(i, node) {
+                    //   return i === node.table.widths.length - 1 ? 0 : 8;
+                    return 8
+                }
+            }
+        }
+    } else {
+        c = {
+            style: 'body',
+            table: {
+                headerRows: 0,
+                widths: [columnWidth, '*'],
+                body: [
+                    [{ fillColor: '#b3b3b3', bold: true, text: column1 }, { fillColor: '#e6e6e6', text: column2 }]
+                    // [{ fillColor: '#CCCCCC', bold: true, text: 'Report' }, {fillColor: '#d1d1d1', text:'Desk survey and ecological forecasting'}],
+                ]
+            },
+            layout: {
+                hLineWidth: function hLineWidth(i, node) {
+                    return 0
+                },
+                vLineWidth: function vLineWidth(i) {
+                    return 0;
+                },
+                hLineColor: function hLineColor(i) {
+                    //   return i === 1 ? 'black' : '#aaa';
+                    return '#ffffff'
+                },
+                paddingLeft: function paddingLeft(i) {
+                    //   return i === 0 ? 0 : 8;
+                    return 16
+                },
+                paddingRight: function paddingRight(i, node) {
+                    //   return i === node.table.widths.length - 1 ? 0 : 8;
+                    return 16
+                },
+                paddingTop: function paddingTop(i, node) {
+                    //   return i === node.table.widths.length - 1 ? 0 : 8;
+                    return 16
+                },
+                paddingBottom: function paddingBottom(i, node) {
+                    //   return i === node.table.widths.length - 1 ? 0 : 8;
+                    return 8
+                }
+            }
+        }
+    }
+    return c;
 }
