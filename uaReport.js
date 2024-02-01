@@ -3,6 +3,12 @@ let vw = 595.28;
 let vh = 841.89;
 let padding = vh / 6;
 let docDefinition;
+let gap = 30;
+
+// Styles
+let lightGray = '#e6e6e6';
+let midGray = '#b3b3b3';
+let orange = '#fc8124';
 
 // Input variables
 let container;
@@ -39,6 +45,7 @@ function UpdateDoc() {
         images: {
             img1: 'https://cdn.jsdelivr.net/gh/simizeko/report-assets@main/images/photo-1471289660181-7feae98d61ae.jpeg',
             logo: 'https://cdn.jsdelivr.net/gh/simizeko/report-assets@main/images/UpAcreStackedRGB.png',
+
         },
         header: {
             image: 'img1',
@@ -190,12 +197,19 @@ function UpdateDoc() {
             /////////////////////////////
             // PAGE 2
             Title('Project Outline'),
-            twoColumn('Report', 'Desk survey and ecological forecasting.'),
-            twoColumn('Site Visit', 'Discussion of the BNG strategy and NDA.'),
-            twoColumn('Legals', 'Signing and negotiating of all legal documents.'),
-            twoColumn('Sell Units', 'Marketing of site to appropriate developers seeking planning.'),
-            twoColumn('Trigger Lease', 'The 33 year lease begins and all parties get paid.'),
-            twoColumn('Manage and Monitor', 'Habitats created and the monitoring and management of the site begins.', '#d4682f')
+            TwoColumn('Report', 'Desk survey and ecological forecasting.'),
+            Arrow(midGray),
+            TwoColumn('Site Visit', 'Discussion of the BNG strategy and NDA.'),
+            Arrow(midGray),
+            TwoColumn('Legals', 'Signing and negotiating of all legal documents.'),
+            Arrow(midGray),
+            TwoColumn('Sell Units', 'Marketing of site to appropriate developers seeking planning.'),
+            Arrow(midGray),
+            TwoColumn('Trigger Lease', 'The 33 year lease begins and all parties get paid.'),
+            Arrow(midGray),
+            TwoColumn('Manage and Monitor', 'Habitats created and the monitoring and management of the site begins.', orange),
+
+            LineTable(['Project Strategy', 'test test test', 'lorem', 'ipsum donec'])
 
             // {
             //     style: 'body',
@@ -254,13 +268,13 @@ function UpdateDoc() {
                 fontSize: 28,
                 bold: true,
                 lineHeight: 1,
-                margin: [0, padding, 0, 30]
+                margin: [0, padding, 0, gap]
             },
             h1: {
                 fontSize: 28,
                 bold: true,
                 lineHeight: 1,
-                margin: [0, 0, 0, 30]
+                margin: [0, 0, 0, gap]
             },
             h2: {
                 fontSize: 18,
@@ -270,7 +284,7 @@ function UpdateDoc() {
             body: {
                 fontSize: 10,
                 lineHeight: 1.5,
-                margin: [0, 0, 0, 30]
+                margin: [0, 0, 0, gap]
             },
         },
         defaultStyle: {
@@ -279,12 +293,8 @@ function UpdateDoc() {
     }
 }
 
-function CreateDocument() {
-    UpdateValues();
-    UpdateDoc();
-    pdfMake.createPdf(docDefinition).open();
-}
 
+///// HTML page ///////
 function setup() {
     container = createDiv('');
     container.position(0, 0);
@@ -292,7 +302,6 @@ function setup() {
     container.style('padding: 40px');
     container.style('background-color: #f2f2f2');
     // container.style('display: block');
-
 
     Title('Report Prototype');
     Input(LPA.q, LPA.id);
@@ -322,7 +331,7 @@ function setup() {
     // }, 500);
 }
 
-function Title(text) {
+function pageTitle(text) {
     let t = createElement('h1', text);
     t.parent(container);
     t.style('font-family', 'sans-serif');
@@ -348,140 +357,4 @@ function Input(text, id) {
     // UpdateValues();
     // console.log(b.value());
     // });
-}
-
-
-
-function UpdateValues() {
-    LPA.a = Answer(LPA.id);
-    postcode.a = Answer(postcode.id)
-    accountManager.a = Answer(accountManager.id);
-    projectPartner.a = Answer(projectPartner.id);
-    landOwner.a = Answer(landOwner.id);
-    acreage.a = Answer(acreage.id);
-    acquisitionOfLand.a = Answer(acquisitionOfLand.id);
-    yearOfAcquisition.a = Answer(yearOfAcquisition.id);
-    currentLandUse.a = Answer(currentLandUse.id);
-    reasonForDiversification.a = Answer(reasonForDiversification.id);
-    proposedProject.a = Answer(proposedProject.id);
-    income.a = Answer(income.id);
-    expenditure.a = Answer(expenditure.id);
-    landOwnerIncome.a = Answer(landOwnerIncome.id);
-
-    function Answer(id) {
-        let answer = select('#' + id);
-        return answer.value();
-    }
-
-
-    //     // reset array
-    //     // answers = [];
-
-    //     // select all values from the inputs and add to array
-    //     // let a = selectAll('.answers')
-    //     // for (let i = 0; i < a.length; i++) {
-    //     //     answers.push(a[i].value())
-    //     // }
-    //     // LPA = Input(LPAinput)
-    //     // console.log(LPA);
-}
-
-function tableFill(column1, column2) {
-    let t = [{ fillColor: '#b3b3b3', bold: true, text: column1 }, { fillColor: '#e6e6e6', text: column2 }]
-    return t
-}
-
-function Title(titleText) {
-   let t = {
-        text: titleText,
-        style: 'title'
-    }
-    return t;
-}
-
-function twoColumn(column1, column2, color) {
-    let columnWidth = 90;
-    let c;
-    if (color) {
-        c = {
-            style: 'body',
-            table: {
-                headerRows: 0,
-                widths: [columnWidth, '*'],
-                body: [
-                    [{ fillColor: color, bold: true, text: column1 }, { fillColor: color, text: column2 }]
-                    // [{ fillColor: '#CCCCCC', bold: true, text: 'Report' }, {fillColor: '#d1d1d1', text:'Desk survey and ecological forecasting'}],
-                ]
-            },
-            layout: {
-                hLineWidth: function hLineWidth(i, node) {
-                    return 0
-                },
-                vLineWidth: function vLineWidth(i) {
-                    return 0;
-                },
-                hLineColor: function hLineColor(i) {
-                    //   return i === 1 ? 'black' : '#aaa';
-                    return '#ffffff'
-                },
-                paddingLeft: function paddingLeft(i) {
-                    //   return i === 0 ? 0 : 8;
-                    return 16
-                },
-                paddingRight: function paddingRight(i, node) {
-                    //   return i === node.table.widths.length - 1 ? 0 : 8;
-                    return 16
-                },
-                paddingTop: function paddingTop(i, node) {
-                    //   return i === node.table.widths.length - 1 ? 0 : 8;
-                    return 16
-                },
-                paddingBottom: function paddingBottom(i, node) {
-                    //   return i === node.table.widths.length - 1 ? 0 : 8;
-                    return 8
-                }
-            }
-        }
-    } else {
-        c = {
-            style: 'body',
-            table: {
-                headerRows: 0,
-                widths: [columnWidth, '*'],
-                body: [
-                    [{ fillColor: '#b3b3b3', bold: true, text: column1 }, { fillColor: '#e6e6e6', text: column2 }]
-                    // [{ fillColor: '#CCCCCC', bold: true, text: 'Report' }, {fillColor: '#d1d1d1', text:'Desk survey and ecological forecasting'}],
-                ]
-            },
-            layout: {
-                hLineWidth: function hLineWidth(i, node) {
-                    return 0
-                },
-                vLineWidth: function vLineWidth(i) {
-                    return 0;
-                },
-                hLineColor: function hLineColor(i) {
-                    //   return i === 1 ? 'black' : '#aaa';
-                    return '#ffffff'
-                },
-                paddingLeft: function paddingLeft(i) {
-                    //   return i === 0 ? 0 : 8;
-                    return 16
-                },
-                paddingRight: function paddingRight(i, node) {
-                    //   return i === node.table.widths.length - 1 ? 0 : 8;
-                    return 16
-                },
-                paddingTop: function paddingTop(i, node) {
-                    //   return i === node.table.widths.length - 1 ? 0 : 8;
-                    return 16
-                },
-                paddingBottom: function paddingBottom(i, node) {
-                    //   return i === node.table.widths.length - 1 ? 0 : 8;
-                    return 8
-                }
-            }
-        }
-    }
-    return c;
 }
