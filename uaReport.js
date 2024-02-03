@@ -54,14 +54,15 @@ function UpdateDoc() {
 
         },
         header: {
-            image: 'img1',
+            // image: 'img1',
             // fit: [vw, vh / 6]
-            width: vw,
-            height: padding
+            // width: vw,
+            // height: padding
         },
         content: [
             /////////////////////////////
             // PAGE 1
+            HeaderImage('img1'),
             {
                 image: 'logo',
                 width: 140,
@@ -108,6 +109,7 @@ function UpdateDoc() {
 
             /////////////////////////////
             // PAGE 2
+            HeaderImage('img1'),
             Title("Executive Summary"),
             h3("Overview"),
             LineTable([
@@ -144,6 +146,7 @@ function UpdateDoc() {
 
             /////////////////////////////
             // PAGE 3
+            HeaderImage('plot'),
             Title('Project Outline'),
             TwoColumn('Report', 'Desk survey and ecological forecasting.'),
             Arrow(midGray),
@@ -169,6 +172,7 @@ function UpdateDoc() {
 
             /////////////////////////////
             // PAGE 4
+            HeaderImage('img1'),
             Title('Financial Forecast'),
             h3('Revenue'),
             BodySmall("Total sales is the income from sales and is based on the assumptions that a unit will be sold for £20,000 and a management cost of £7,000 per-unit created is achieved."),
@@ -202,6 +206,7 @@ function UpdateDoc() {
 
             /////////////////////////////
             // PAGE 4
+            HeaderImage('img1'),
             Title("The Site"),
             { image: "plot", width: fullWidth / 1.5, margin: [0, 0, 0, gap] },
             // Shape('rect', midGray),
@@ -237,47 +242,42 @@ function UpdateDoc() {
             },
             PageBreak(),
 
+            /////////////////////////////
+            // PAGE 5
+            HeaderImage('img1'),
             Title("Terms & Conditions"),
             TermsAndConditions(),
-            BodySmall("By engaging in Up Acre's services, the client agrees to abide by these terms and conditions.")
+            BodySmall("By engaging in Up Acre's services, the client agrees to abide by these terms and conditions."),
+            PageBreak(),
 
-
-            // h4("1. Introduction"),
-            // Body("1.1 Up Acre Ltd. ('Up Acre') specialises in alternative land diversification for farmers and landowners."),
-            // 2. Reports and Advice:
-            // 2.1 Up Acre provides reports based on predictions and estimations. These reports are generic advice and should not be
-            // considered as absolute guarantees.
-            // 2.2 Clients are advised to conduct their own research and seek professional advice before making any decisions based
-            // on the reports provided by Up Acre.
-            // 3. Remuneration:
-            // 3.1 Up Acre is typically remunerated by the Project Partner at a rate of 2% of the net profit on a finders fee.
-            // 3.2 The compensation amount and terms may vary based on the specific agreement between Up Acre and the Project
-            // Partner.
-            // 4. Confidentiality:
-            // 4.1 Up Acre acknowledges that the information provided by clients may be sensitive and confidential.
-            // 4.2 Up Acre agrees to take all reasonable measures to maintain the confidentiality of client information and not to
-            // disclose it to third parties without the client's explicit consent.
-            // 5. Limitation of Liability:
-            // 5.1 Up Acre shall not be liable for any direct, indirect, incidental, consequential, or exemplary damages arising from the
-            // use of its services.
-            // 5.2 Up Acre's liability is limited to the fees paid by the client for the specific services rendered.
-            // 6. Client Responsibilities:
-            // 6.1 Clients are responsible for verifying the accuracy and completeness of the information provided by Up Acre.
-            // 6.2 Clients are responsible for compliance with any applicable laws and regulations related to the use of Up Acre's
-            // services.
-            // 7. Termination of Services:
-            // 7.1 Either party may terminate the services provided by Up Acre at any given time..
-            // 8. Governing Law:
-            // 8.1 These terms and conditions are governed by the laws of England and any disputes shall be resolved in the
-            // appropriate courts of England.
-            // 9. Amendment of Terms:
-            // 9.1 Up Acre reserves the right to amend these terms and conditions at any time.
-            // 9.2 Clients will be notified of any changes to the terms and conditions, and continued use of Up Acre's services implies
-            // acceptance of the updated terms.
-            // 10. Miscellaneous:
-            // 10.1 These terms and conditions constitute the entire agreement between Up Acre and the client.
-            // 10.2 No waiver or modification of these terms shall be valid unless in writing and signed by both parties."
-
+            /////////////////////////////
+            // PAGE 6
+            HeaderImage('img1'),
+            Title("Biodiversity Net Gain: FAQs"),
+            {
+                columns: [
+                    [
+                        h4body("What is biodiversity net gain?", "Biodiversity net gain (BNG) is a system where housebuilders have to make an overall positive impact on UK’s environment by paying landowners to have degraded or poor parts of land restored and maintained."),
+                        h4body("What is biodiversity net gain in terms of new legal responsibilities for developers?", "As of January 2024, all housebuilders in England are required to provide a minimum 10% ‘net gain’ in biodiversity. This legislation will go a long way towards halting and even reversing the decline in biodiversity in England by ensuring that the issue becomes a primary focus for property developers nationwide."),
+                        h4body("What is biodiversity net gain in terms of ‘onsite’ and ‘offsite’ solutions?", "Onsite BNG means meeting the new requirements and introducing the 10% biodiversity net gain at the same site as development takes place. Onsite solutions are not always viable without losing a developable area; therefore, mitigating against this biodiversity loss is offsite."),
+                        h4body("Are onsite or offsite BNG habitats better for the environment?", "From an ecological perspective, offsite is better. The types of habitats and species generated onsite tend to be heavily weighted towards species that thrive near human activity. Working offsite – and preferably linking up several biodiversity sites into more significant sites – means a greater diversity of species can thrive."),
+                        h4body("What is a Habitat Unit (HU)?", "A Habitat Unit is a parcel of land that is used to create an uplift in biodiversity. A unit is usually made on low-productivity land, which can be converted to species-rich grassland, woodland, wetland, mixed scrub or rewilding sites. The numerical value of a Habitat Unit is based on its type, distinctiveness, condition and location. Conversion of low-value habitats to higher-value ones typically generates 1-3 Habitat Units per acre.")
+                    ],
+                    [
+                        h4body("How much does the Landowner receive?", "If the Landowner inputs over 20 acres of land, they will receive an upfront payment. The amount is typically £15,000 - £30,000 per acre. £10,000 is the agricultural value of the land, and the remainder is half the HU value of the land. The other half is the amount the developer takes.\n\nLand under 20 acres is more complicated and can range from £300 - £600 per acre per annum over 30 years. This is only if you decide to go with a leased land bank agreement."),
+                        h4("An Example of how it works", orange),
+                        NumberList([
+                            "A housebuilder builds 100 homes but, in the process, destroys an ancient bog (or something equivalent).",
+                            "The housebuilder hires an ecologist to calculate the environmental damage this has caused. The Ecologist uses the Habitat Units to show the extent of damage done to the bog. (for this, we will say they score - 10 Habitat Units)",
+                            "The housebuilder must find and purchase appropriate Habitat Units to offset the damage to the ancient bog.",
+                            "They find a landowner who, with the help of a Specialist Ecologist, has restored their over farmed and disused land into a new bog(or wildflower meadow, forest etc).For doing this, the land owner is awarded Habitat Units.",
+                            "The housebuilder will contact the landowner and purchase the necessary Habitat Units. (As this has to be a net gain of 10%, the housebuilder must buy +11 Habitat Units from the landowner.)",
+                            "Each Habitat Unit typically costs £15,000 - £40,000 and has to be maintained for 30 years.The landowner retains all ownership of the land, and at the end of the 30 years, they can do whatever they so wish with the land.",
+                            "It is down to the landowner to maintain and manage the land throughout the 30"
+                        ])
+                    ]
+                ]
+            }
         ],
 
         // Base styles

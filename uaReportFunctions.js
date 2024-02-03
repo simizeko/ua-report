@@ -28,10 +28,11 @@ function h3(h3text) {
     return t;
 }
 
-function h4(h4text) {
+function h4(h4text, color) {
     let t = {
         text: h4text,
-        style: 'h4'
+        style: 'h4',
+        color: color
     }
     return t;
 }
@@ -51,6 +52,37 @@ function BodySmall(bodytext) {
     };
     return bs;
 }
+
+function NumberList(values) {
+    // Add paragraph break to end of each string
+    for (let i = 0; i < values.length; i++) {
+        values[i] += "\n\n"
+    }
+    let l = {
+        style: 'body',
+        lineHeight: 1.1,
+        margin: [0, 2, 0, gap / 2],
+        ol: values
+    };
+    return l;
+}
+
+function h4body(h3text, bodytext) {
+    let t = {
+        text: h3text,
+        style: 'h4',
+        color: orange,
+        margin: [0, 0, 0, 0.5]
+    };
+    let b = {
+        text: bodytext,
+        style: 'body',
+        lineHeight: 1.15,
+        margin: [0, 0, 0, gap / 2]
+    };
+    return [t, b];
+}
+
 
 function TableFill(column1, column2) {
     let t = [{ fillColor: '#b3b3b3', bold: true, text: column1 }, { fillColor: '#e6e6e6', text: column2 }]
@@ -168,7 +200,7 @@ function FillTable(values) {
                 return pad;
             },
             paddingRight: function paddingRight(i, node) {
-                return pad;
+                return pad / 2;
             },
             paddingTop: function paddingTop(i, node) {
                 return pad;
@@ -276,6 +308,16 @@ function Arrow(color) {
     return c;
 }
 
+function HeaderImage(imagery) {
+    let pic = {
+        image: imagery,
+        absolutePosition: { x: 0, y: 0 },
+        // width: 10,
+        cover: { width: vw, height: padding, valign: "center", align: "center" }
+    };
+    return pic;
+}
+
 function Shape(type, color) {
     let s = {
         margin: [0, 0, 0, gap],
@@ -301,7 +343,7 @@ function Columns(values) {
             LoopValues()
         ]
     }
-   
+
     return c;
     function LoopValues() {
         let val = [];
