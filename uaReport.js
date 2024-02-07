@@ -340,7 +340,7 @@ function setup() {
     container.style('background-color: #f2f2f2');
     // container.style('display: block');
 
-    Title('Report Prototype');
+    pageTitle('Report Prototype');
     Input(LPA.q, LPA.id);
     Input(postcode.q, postcode.id);
     Input(accountManager.q, accountManager.id);
