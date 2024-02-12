@@ -8,6 +8,8 @@ let fullWidth = vw - (docMargins * 2);
 let gap = 30;
 let colGap = 50;
 
+
+
 // Colours
 let lightGray = '#f2f2f2';
 let midGray = '#e6e6e6';
