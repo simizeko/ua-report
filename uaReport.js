@@ -8,7 +8,14 @@ let fullWidth = vw - (docMargins * 2);
 let gap = 30;
 let colGap = 50;
 
-
+// Import variables
+let clientSelect = 0;
+let clientList = [];
+let worksheets = {};
+let client = {}
+let sheets;
+let selection;
+let plotImage;
 
 // Colours
 let lightGray = '#f2f2f2';
@@ -18,7 +25,6 @@ let orange = '#fc8124';
 
 // Input variables
 let container;
-let submit;
 let LPA = { q: 'Land Planning Authority:', id: 'lpa', a: '' };
 let postcode = { q: "Postcode:", id: "pc", a: '' };
 let accountManager = { q: "Account Manager:", id: "am", a: '' };
@@ -72,13 +78,13 @@ function UpdateDoc() {
                 margin: [0, vh / 4, 0, 60]
             },
             {
-                text: LPA.a,
+                text: client.LPA,
                 style: 'h1',
                 alignment: 'center',
                 margin: [0, 0, 0, 0]
             },
             {
-                text: postcode.a,
+                text: client.Postcode,
                 style: 'h1',
                 alignment: 'center',
                 bold: false
@@ -90,7 +96,7 @@ function UpdateDoc() {
                 margin: [0, 0, 0, 0]
             },
             {
-                text: accountManager.a,
+                text: client['Account Manager'],
                 style: 'body',
                 alignment: 'center',
                 margin: [0, 0, 0, 0]
@@ -115,34 +121,34 @@ function UpdateDoc() {
             Title("Executive Summary"),
             h3("Overview"),
             LineTable([
-                "Land Owner", landOwner.a,
-                "Acreage", acreage.a,
-                "Land Planning Authority", LPA.a,
-                "Acquisition of Land", acquisitionOfLand.a,
-                "Year of Acquisition", yearOfAcquisition.a,
-                "Current Land Use", currentLandUse.a,
-                "Reason for Diversification", reasonForDiversification.a,
-                "Proposed Project", proposedProject.a
+                "Land Owner", client["Client Name"],
+                "Acreage", client.Acreage,
+                "Land Planning Authority", client.LPA,
+                "Acquisition of Land", client["Acquisition of Land"],
+                "Year of Acquisition", client["Year of Acquisition "],
+                "Current Land Use", client["Current Land Use "],
+                "Reason for Diversification", "{{ROD}}",
+                "Proposed Project", client["Proposed Project "]
             ]),
             Body(
                 "This report is a personalised review of your submitted "
-                + acreage.a
+                + client.Acreage
                 + " acres in "
-                + LPA.a
+                + client.LPA
                 + ", "
-                + postcode.a
+                + client.Postcode
                 + ". Our project partner, "
-                + projectPartner.a
+                + client["Project Partner"]
                 + ", has analysed and evaluated your land's potential within "
-                + proposedProject.a
+                + client["Proposed Project "]
                 + ". The report is a guide for potential diversification, and all figures/strategies should be taken as estimations. Below is my brief summary on the project."),
 
-            Body("{{executive summary}}"),
+            Body(client["Executive Summary"]),
             h3("Financial Summary"),
             LineTable([
-                "Total Project Income", income.a,
-                "Total Project Cost", expenditure.a,
-                "Land Owner Income", landOwnerIncome.a
+                "Total Project Income", "£ " + str(client["Income "]).replace(/\d{1,3}(?=(\d{3})+(?!\d))/g, "$&,"),
+                "Total Project Cost", "£ " + str(client.Expenditure).replace(/\d{1,3}(?=(\d{3})+(?!\d))/g, "$&,"),
+                "Land Owner Income", "£ " + str(client["Landowner Income"]).replace(/\d{1,3}(?=(\d{3})+(?!\d))/g, "$&,")
             ]),
             PageBreak(),
 
@@ -335,6 +341,7 @@ function UpdateDoc() {
 
 ///// HTML page ///////
 function setup() {
+    select('.p5Canvas').remove();
     container = createDiv('');
     container.position(0, 0);
     container.style('width', '100vw');
@@ -343,31 +350,15 @@ function setup() {
     // container.style('display: block');
 
     pageTitle('Report Prototype');
-    Input(LPA.q, LPA.id);
-    Input(postcode.q, postcode.id);
-    Input(accountManager.q, accountManager.id);
-    Input(projectPartner.q, projectPartner.id);
-    Input(landOwner.q, landOwner.id);
-    Input(acreage.q, acreage.id);
-    Input(acquisitionOfLand.q, acquisitionOfLand.id);
-    Input(yearOfAcquisition.q, yearOfAcquisition.id);
-    Input(currentLandUse.q, currentLandUse.id);
-    Input(reasonForDiversification.q, reasonForDiversification.id);
-    Input(proposedProject.q, proposedProject.id);
-    Input(income.q, income.id);
-    Input(expenditure.q, expenditure.id);
-    Input(landOwnerIncome.q, landOwnerIncome.id);
+    createP('Please upload the spreadsheet as an .xlsx').parent(container).addClass('Body');
 
-    submit = createButton('Create PDF');
-    submit.parent(container);
-    submit.style('padding', '10px');
-    submit.style('margin-top', '30px');
-    submit.style('display', 'block');
-    submit.mouseReleased(CreateDocument);
-
-    // setInterval(() => {
-    //     console.log(LPA.a)
-    // }, 500);
+    // Find the input in the html and parent to container div
+    let upload = select("#file");
+    upload.parent(container);
+    // let upload = createFileInput().id('file');
+    // upload.parent(container);
+    Init();
+    Styles();
 }
 
 function pageTitle(text) {
@@ -378,22 +369,153 @@ function pageTitle(text) {
     t.style('width', '100%');
 }
 
-function Input(text, id) {
-    let l = createElement('label', text).attribute('for', id);
-    l.parent(container);
-    l.style('margin-bottom', '4px');
-    l.style('font-family', 'sans-serif');
-    l.style('display', 'block');
+function Init() {
+    var workbook;
+    var input = document.getElementById("file");
 
-    let b = createInput('').id(id)
-    b.parent(container);
-    b.style('margin-bottom', '40px');
-    b.style('padding', '8px');
-    // b.style('width', '40%');
-    b.style('width', '250px');
-    b.value('{{' + id + '}}')
-    // b.input(() => {
-    // UpdateValues();
-    // console.log(b.value());
-    // });
+    input.addEventListener("change", function (e) {
+        if (!!input.files && input.files.length > 0) {
+
+            var reader = new FileReader();
+
+            reader.readAsArrayBuffer(e.target.files[0]);
+
+            reader.onload = function (e) {
+                var data = new Uint8Array(reader.result);
+                workbook = XLSX.read(data, { type: "array" });
+                sheets = workbook.SheetNames;
+
+                for (const element of workbook.SheetNames) {
+                    worksheets[element] = XLSX.utils.sheet_to_json(workbook.Sheets[element]);
+
+                }
+                // console.log("JSON\n", JSON.stringify(worksheets), "\n\n");
+                // console.log(worksheets[sheets[0]][4])
+                // console.log(worksheets[sheets[3]][0].LPA)
+                // console.log(worksheets[sheets[0]][0]["Client Number "]);
+
+                // Populate a list of client numbers
+                for (let i = 0; i < worksheets[sheets[0]].length; i++) {
+                    let l = worksheets[sheets[0]][i]["Client Number "];
+                    clientList.push(l);
+                }
+
+
+                // if (clientList.length < 0) {
+                //     createP('Please upload a valid .xlsx spreadsheet').parent(container).addClass('Body');
+                // }
+
+                ClientDropDown(clientList)
+                Styles();
+            }
+
+        }
+    });
 }
+
+function ClientDropDown(list) {
+    createP('Please select client number').parent(container).style('margin-top: 40px').addClass('Body');
+
+    let select = createSelect();
+    select.parent(container);
+    select.style('display', 'block');
+    select.style('margin-bottom', '20px');
+    // select.style('margin-top', '20px');
+    select.option('Client Number');
+    select.disable('Client Number');
+    select.selected('Client Number');
+
+    for (let i = 0; i < list.length; i++) {
+        select.option(list[i]);
+    }
+    select.style('width', '200px');
+    select.changed(UpdateClient);
+
+
+    function UpdateClient() {
+        clientSelect = clientList.indexOf(Number(select.value()));
+        client = worksheets[sheets[Object.keys(worksheets).indexOf('Report')]][clientSelect];
+
+        PlotImageUpload();
+
+        SubmitButton('Create Report PDF');
+        ClientDisplay();
+        // UpdateData();
+        Styles();
+    }
+}
+
+function ClientDisplay() {
+    //Clear all client Info text
+    let info = selectAll('.clientInfo');
+    for (let i = 0; i < info.length; i++) {
+        info[i].remove();
+    }
+
+    createElement('h3', 'Client Info').style('font-family: sans-serif').style('margin-top: 50px').parent(container).addClass('clientInfo');
+    let keys = Object.keys(client);
+    let values = Object.values(client);
+    for (let i = 0; i < Object.entries(client).length; i++) {
+        createP(keys[i] + ":   " + values[i]).style('font-family: sans-serif').parent(container).addClass('clientInfo')
+    }
+}
+
+function SubmitButton(text) {
+    let buttons = selectAll('#submitButton');
+    for (let i = 0; i < buttons.length; i++) {
+        buttons[i].remove();
+    }
+
+    let submit = createButton(text).id('submitButton');
+    submit.parent(container);
+    submit.style('padding', '10px');
+    submit.style('margin-top', '30px');
+    submit.style('display', 'block');
+    submit.mouseReleased(CreateDocument);
+}
+
+function PlotImageUpload() {
+    let l = createP('Upload a plot image (optional)').parent(container).style('margin-top: 40px').addClass('Body');
+    let imgUpload = createFileInput(HandleImage).id('PlotImage');
+    imgUpload.parent(container);
+
+    function HandleImage(file) {
+        if (file.type === 'image') {
+            let pic = createImg(file.data, '');
+            pic.parent(l);
+            pic.style('width', '200px');
+            pic.style('display', 'block');
+            pic.style('margin-top','20px');
+        } else {
+            pic = null;
+        }
+    }
+}
+
+
+function Styles() {
+    let b = selectAll('.Body')
+    for (let i = 0; i < b.length; i++) {
+        b[i].style('font-family', 'sans-serif');
+    }
+}
+
+// function Input(text, id) {
+//     let l = createElement('label', text).attribute('for', id);
+//     l.parent(container);
+//     l.style('margin-bottom', '4px');
+//     l.style('font-family', 'sans-serif');
+//     l.style('display', 'block');
+
+//     let b = createInput('').id(id)
+//     b.parent(container);
+//     b.style('margin-bottom', '40px');
+//     b.style('padding', '8px');
+//     // b.style('width', '40%');
+//     b.style('width', '250px');
+//     b.value('{{' + id + '}}')
+//     // b.input(() => {
+//     // UpdateValues();
+//     // console.log(b.value());
+//     // });
+// }

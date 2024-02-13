@@ -497,7 +497,7 @@ function UpdateValues() {
 }
 
 function CreateDocument() {
-    UpdateValues();
+    // UpdateValues();
     UpdateDoc();
     pdfMake.createPdf(docDefinition).open();
 }

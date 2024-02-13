@@ -2,6 +2,7 @@
 let clientSelect = 0;
 let clientList = [];
 let worksheets = {};
+let client = {}
 let sheets;
 let selection;
 
@@ -9,13 +10,13 @@ let lpa;
 let postcode;
 
 function setup() {
-
+    select('.p5Canvas').remove();
     Init();
 }
 
 
 function Init() {
-    var workbook
+    var workbook;
     var input = document.getElementById("file");
 
     input.addEventListener("change", function (e) {
@@ -28,13 +29,10 @@ function Init() {
             reader.onload = function (e) {
                 var data = new Uint8Array(reader.result);
                 workbook = XLSX.read(data, { type: "array" });
-                // console.log(workbook.Sheets[workbook.SheetNames[0]]);
                 sheets = workbook.SheetNames;
-                // console.log(sheets)
 
                 for (const element of workbook.SheetNames) {
                     worksheets[element] = XLSX.utils.sheet_to_json(workbook.Sheets[element]);
-                    // console.log(worksheets)
 
                 }
                 // console.log("JSON\n", JSON.stringify(worksheets), "\n\n");
@@ -42,7 +40,7 @@ function Init() {
                 // console.log(worksheets[sheets[3]][0].LPA)
                 // console.log(worksheets[sheets[0]][0]["Client Number "]);
 
-
+                // Populate a list of client numbers
                 for (let i = 0; i < worksheets[sheets[0]].length; i++) {
                     let l = worksheets[sheets[0]][i]["Client Number "];
                     clientList.push(l);
@@ -56,6 +54,10 @@ function Init() {
 
 function ClientDropDown(list) {
     let select = createSelect();
+    select.option('Client Number');
+    select.disable('Client Number');
+    select.selected('Client Number');
+
     for (let i = 0; i < list.length; i++) {
         select.option(list[i]);
     }
@@ -66,25 +68,45 @@ function ClientDropDown(list) {
 
     function UpdateClient() {
         clientSelect = clientList.indexOf(Number(select.value()));
+        client = worksheets[sheets[Object.keys(worksheets).indexOf('Report')]][clientSelect];
+
         ClientDisplay();
-        ClientData();
-        console.log("LPA: ", lpa);
-        console.log("Acres: ", acres);
+        // UpdateData();
     }
 }
 
 function ClientDisplay() {
-    createElement('h1', 'Client Info');
-    let keys = Object.keys(worksheets[sheets[0]][clientSelect]);
-    let values = Object.values(worksheets[sheets[0]][clientSelect]);
-    for (let i = 0; i < Object.keys(worksheets[sheets[0]][clientSelect]).length; i++) {
-        let list = createP(keys[i] + ":   " + values[i])
+    //Clear all client Info text
+    let info = selectAll('.clientInfo');
+    for (let i = 0; i < info.length; i++) {
+        info[i].remove();
+    }
+
+    createElement('h1', 'Client Info').addClass('clientInfo');
+    let keys = Object.keys(client);
+    let values = Object.values(client);
+    for (let i = 0; i < Object.entries(client).length; i++) {
+        createP(keys[i] + ":   " + values[i]).addClass('clientInfo')
     }
 }
 
-function ClientData(selection) {
-    lpa = worksheets[sheets[0]][clientSelect].LPA
-    acres = worksheets[sheets[0]][clientSelect].Acres
+function UpdateData(selection) {
+
+    // // Pulling data from different sheets
+    // client = {
+    //     lpa: worksheets[sheets[0]][clientSelect].LPA,
+    //     postcode: worksheets[sheets[3]][clientSelect].postcode,
+    //     accountManager: worksheets[sheets["Report"]][clientSelect]["Account Manager"],
+    //     name: worksheets[sheets[3]][clientSelect]["Client Name"],
+    //     acreage: worksheets[sheets[0]][clientSelect].Acres,
+    //     aol: worksheets[sheets[0]][clientSelect].LPA,
+    // }
+
+    // Finds the sheet called 'Report' and uses the clientSelect value to narrow down to a single row
+    client = worksheets[sheets[Object.keys(worksheets).indexOf('Report')]][clientSelect]
+
+    // console.log(Object.keys(worksheets).indexOf('Report'));
+    console.log(client['Account Manager']);
 }
 
 // function Init() {
