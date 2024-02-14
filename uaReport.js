@@ -23,22 +23,22 @@ let midGray = '#e6e6e6';
 let darkGray = '#666666';
 let orange = '#fc8124';
 
-// Input variables
-let container;
-let LPA = { q: 'Land Planning Authority:', id: 'lpa', a: '' };
-let postcode = { q: "Postcode:", id: "pc", a: '' };
-let accountManager = { q: "Account Manager:", id: "am", a: '' };
-let projectPartner = { q: "Project Partner:", id: 'pPartner', a: '' };
-let landOwner = { q: "Land Owner:", id: "lo", a: '' };
-let acreage = { q: "Acreage:", id: "acres", a: '' };
-let acquisitionOfLand = { q: "Acquisition of Land:", id: "aol", a: '' };
-let yearOfAcquisition = { q: "Year of Acquisition:", id: "yoa", a: '' };
-let currentLandUse = { q: "Current Land Use:", id: "clu", a: '' };
-let reasonForDiversification = { q: "Reason For Diversification:", id: "rfd", a: '' };
-let proposedProject = { q: "Proposed Project:", id: "pp", a: '' };
-let income = { q: "Income:", id: "income", a: "" };
-let expenditure = { q: "Expenditure:", id: "exp", a: "" };
-let landOwnerIncome = { q: "Land Owner Income:", id: "loi", a: "" };
+//// Input variables
+// let container;
+// let LPA = { q: 'Land Planning Authority:', id: 'lpa', a: '' };
+// let postcode = { q: "Postcode:", id: "pc", a: '' };
+// let accountManager = { q: "Account Manager:", id: "am", a: '' };
+// let projectPartner = { q: "Project Partner:", id: 'pPartner', a: '' };
+// let landOwner = { q: "Land Owner:", id: "lo", a: '' };
+// let acreage = { q: "Acreage:", id: "acres", a: '' };
+// let acquisitionOfLand = { q: "Acquisition of Land:", id: "aol", a: '' };
+// let yearOfAcquisition = { q: "Year of Acquisition:", id: "yoa", a: '' };
+// let currentLandUse = { q: "Current Land Use:", id: "clu", a: '' };
+// let reasonForDiversification = { q: "Reason For Diversification:", id: "rfd", a: '' };
+// let proposedProject = { q: "Proposed Project:", id: "pp", a: '' };
+// let income = { q: "Income:", id: "income", a: "" };
+// let expenditure = { q: "Expenditure:", id: "exp", a: "" };
+// let landOwnerIncome = { q: "Land Owner Income:", id: "loi", a: "" };
 
 pdfMake.fonts = {
     helvetica: {
@@ -78,13 +78,13 @@ function UpdateDoc() {
                 margin: [0, vh / 4, 0, 60]
             },
             {
-                text: client.LPA,
+                text: client.lpa,
                 style: 'h1',
                 alignment: 'center',
                 margin: [0, 0, 0, 0]
             },
             {
-                text: client.Postcode,
+                text: client.postcode,
                 style: 'h1',
                 alignment: 'center',
                 bold: false
@@ -96,7 +96,7 @@ function UpdateDoc() {
                 margin: [0, 0, 0, 0]
             },
             {
-                text: client['Account Manager'],
+                text: client.accountManager,
                 style: 'body',
                 alignment: 'center',
                 margin: [0, 0, 0, 0]
@@ -121,34 +121,34 @@ function UpdateDoc() {
             Title("Executive Summary"),
             h3("Overview"),
             LineTable([
-                "Land Owner", client["Client Name"],
-                "Acreage", client.Acreage,
-                "Land Planning Authority", client.LPA,
-                "Acquisition of Land", client["Acquisition of Land"],
-                "Year of Acquisition", client["Year of Acquisition "],
-                "Current Land Use", client["Current Land Use "],
-                "Reason for Diversification", "{{ROD}}",
-                "Proposed Project", client["Proposed Project "]
+                "Land Owner", client.name,
+                "Acreage", client.acres,
+                "Land Planning Authority", client.lpa,
+                "Acquisition of Land", client.aol,
+                "Year of Acquisition", client.yoa,
+                "Current Land Use", client.clu,
+                "Reason for Diversification", client.rfd,
+                "Proposed Project", client.proposedProject
             ]),
             Body(
                 "This report is a personalised review of your submitted "
-                + client.Acreage
+                + client.acres
                 + " acres in "
-                + client.LPA
+                + client.lpa
                 + ", "
-                + client.Postcode
+                + client.postcode
                 + ". Our project partner, "
-                + client["Project Partner"]
+                + client.projectPartner
                 + ", has analysed and evaluated your land's potential within "
-                + client["Proposed Project "]
+                + client.proposedProject
                 + ". The report is a guide for potential diversification, and all figures/strategies should be taken as estimations. Below is my brief summary on the project."),
 
-            Body(client["Executive Summary"]),
+            Body(client.executiveSummary),
             h3("Financial Summary"),
             LineTable([
-                "Total Project Income", "£ " + str(client["Income "]).replace(/\d{1,3}(?=(\d{3})+(?!\d))/g, "$&,"),
-                "Total Project Cost", "£ " + str(client.Expenditure).replace(/\d{1,3}(?=(\d{3})+(?!\d))/g, "$&,"),
-                "Land Owner Income", "£ " + str(client["Landowner Income"]).replace(/\d{1,3}(?=(\d{3})+(?!\d))/g, "$&,")
+                "Total Project Income", client.income,
+                "Total Project Cost", client.expenditure,
+                "Land Owner Income", client.loIncome
             ]),
             PageBreak(),
 
@@ -169,12 +169,12 @@ function UpdateDoc() {
             TwoColumn('Manage and Monitor', 'Habitats created and the monitoring and management of the site begins.', orange),
 
             LineTable([
-                'Project Strategy', '{{strategy}}',
-                'Habitats', '{{habitats}}',
-                'Options Agreement', '{{options agreement}}',
-                'Management Agreement', '{{management agreement}}',
-                'Landowner Obligations', '{{landowner obligations}}',
-                'Term Length', '{{term length}}'
+                'Project Strategy', client.strategy,
+                'Habitats', client.habitats,
+                'Options Agreement', client.optionAgreement,
+                'Management Agreement', client.managementAgreement,
+                'Landowner Obligations', client.loObligation,
+                'Term Length', client.termLength
             ]),
             PageBreak(),
 
@@ -185,31 +185,31 @@ function UpdateDoc() {
             h3('Revenue'),
             BodySmall("Total sales is the income from sales and is based on the assumptions that a unit will be sold for £20,000 and a management cost of £7,000 per-unit created is achieved."),
             LineTable([
-                'Unit Sales', '{{unit sales}}',
-                'Maintenance Sales', '{{management sales}}'
+                'Unit Sales', client.sales,
+                'Maintenance Sales', client.mSales
             ]),
             h3('Costs'),
             BodySmall("The below costs are subtracted from total sales, resulting in a net-profit."),
             LineTable([
-                'Management Costs', '{{Management Costs}}',
-                'Development Costs', '{{Development Costs}}',
-                'Sales Fee', '{{Sales Fee}}',
-                'Hurdle Rate', '{{Hurdle Rate}}',
-                'Total Costs', '{{expenditure}}',
-                'Net Profit', '{{net profit}}'
+                'Management Costs', client.mCosts,
+                'Development Costs', client.habitatCreation,
+                'Sales Fee', client.salesFee,
+                'Hurdle Rate', client.hurdleRate,
+                'Total Costs', client.expenditure,
+                'Net Profit', client.netProfit
             ], true),
             h3("Total Paid to Land Owner"),
             BodySmall("The net profit is then split in a 60% favour of you, the landower. The hurdle rate (which is the estimation of your lands market value), is added to the net-profit to accumulate your grand total."),
             LineTable([
-                "60% Split of Sales", "{{landowner cut}}",
-                "Hurdle Rate", "{{hurdle rate}}"
+                "60% Split of Sales",  client.loCut,
+                "Hurdle Rate", client.hurdleRate
             ]),
             // TwoColumn("Total Net Income for the Landowner", "{{landowner income}}",null, 'TOTAL')
             FillTable([
-                "Total Net Income for the Landowner", "{{landowner income}}"
+                "Total Net Income for the Landowner", client.loIncome
             ]),
             BodySmall("Please note the above sum is an estimation and could be subject to change."),
-            Body("{{financial summary}}"),
+            Body(client.financialSummary),
             PageBreak(),
 
             /////////////////////////////
@@ -225,26 +225,26 @@ function UpdateDoc() {
             {
                 columns: [
                     LineTable([
-                        "Grade Land", "{{grade land}}",
-                        "Soil Type", "{{soil type}}",
-                        "Terrain", "{{terrain}}",
-                        "Brownfield", "{{brownfield}}",
-                        "Near Water", "{{near water}}",
-                        "Near Main Roads", "{{Near Main Roads}}",
-                        "Built Up Area", "{{distance from area}}",
-                        "RAMSAR", "{{ramsar}}",
-                        "National Park", "{{national park}}"
+                        "Grade Land", client.gradeLand,
+                        "Soil Type", client.soilType,
+                        "Terrain", client.terrain,
+                        "Brownfield", client.brownfield,
+                        "Near Water", client.nearWater,
+                        "Near Main Roads", client.nearAm,
+                        "Built Up Area", client.dfba,
+                        "RAMSAR", client.ramsar,
+                        "National Park", client.nationalPark
                     ]),
                     LineTable([
-                        "Ancient Woodland", "{{ancient woodland}}",
-                        'Flood Zone 2', '{{flood zone 2}}',
-                        "Flood Zone 3", "{{flood zone 3}}",
-                        "Greenbelt", "{{greenbelt}}",
-                        "Public Rights of Way", "{{prow}}",
-                        "Listed Buildings", "{{listed buildings}}",
-                        "Nature Reserves", "{{nature reserves}}",
-                        "AONB", "{{aonb}}",
-                        "SSSI", "{{sssi}}"
+                        "Ancient Woodland", client.ancientWoodland,
+                        'Flood Zone 2', client.floodZone2,
+                        "Flood Zone 3", client.floodZone3,
+                        "Greenbelt", client.greenbelt,
+                        "Public Rights of Way", client.prow,
+                        "Listed Buildings", client.listedBuildings,
+                        "Nature Reserves", client.natureReserve,
+                        "AONB", client.aonb,
+                        "SSSI", client.sssi
                     ])
                 ]
             },
@@ -434,7 +434,70 @@ function ClientDropDown(list) {
 
     function UpdateClient() {
         clientSelect = clientList.indexOf(Number(select.value()));
-        client = worksheets[sheets[Object.keys(worksheets).indexOf('Report')]][clientSelect];
+
+        ClientObject(worksheets[sheets[Object.keys(worksheets).indexOf('Report')]][clientSelect]);
+
+
+        function ClientObject(spreadsheet) {
+            //// The client object is defined here
+            // client = worksheets[sheets[Object.keys(worksheets).indexOf('Report')]][clientSelect];
+            client = {
+                lpa: spreadsheet.LPA,
+                postcode: spreadsheet.Postcode,
+                accountManager: spreadsheet["Account Manager"],
+                name: spreadsheet["Client Name"],
+                acres: spreadsheet.Acreage,
+                aol: spreadsheet["Acquisition of Land"],
+                yoa: spreadsheet["Year of Acquisition "],
+                clu: spreadsheet["Current Land Use "],
+                rfd: "{{Reason for Diversification}}",
+                proposedProject: spreadsheet["Proposed Project "],
+                projectPartner: spreadsheet["Project Partner"],
+                executiveSummary: spreadsheet["Executive Summary"],
+                income: Currency("Income "),
+                expenditure: Currency("Expenditure"),
+                ownerIncome: Currency("Landowner Income"),
+                strategy: spreadsheet.Strategy,
+                habitats: spreadsheet["The Habitats"],
+                optionAgreement: spreadsheet["Option Agreement"],
+                managementAgreement: spreadsheet["Management Agreement"],
+                loObligation: spreadsheet["Landowner Obligation"],
+                termLength: spreadsheet["Term Length"],
+                sales: Currency("Sales"),
+                mSales: Currency("Management Sales"),
+                mCosts: Currency("Management Costs"),
+                habitatCreation: Currency("Habitat Creation"),
+                salesFee: Currency("Sales Fee"),
+                hurdleRate: Currency("Hurdle Rate"),
+                netProfit: Currency("Net Profit"),
+                loCut: Currency("Landowner Cut"),
+                loIncome: Currency("Landowner Income"),
+                financialSummary: "{{Financial Summary}}",
+                gradeLand: spreadsheet["Agricultural Grade Land"],
+                soilType: spreadsheet["Soil type"],
+                terrain: spreadsheet.Terrain,
+                brownfield: spreadsheet.Brownfield,
+                nearWater: spreadsheet["Near Water"],
+                nearAm: spreadsheet["Near A/M Road"],
+                dfba: spreadsheet["Distance from built up area"],
+                ramsar: spreadsheet.RAMSAR,
+                nationalPark: spreadsheet["National Park"],
+                ancientWoodland: spreadsheet["Ancient Woodland"],
+                floodZone2: spreadsheet["Flood Zone 2"],
+                floodZone3: spreadsheet["Flood Zone 3"],
+                greenbelt: spreadsheet.Greenbelt,
+                prow: spreadsheet.PRoW,
+                listedBuildings: spreadsheet["Listed Buildings"],
+                natureReserve: spreadsheet["Nature Reserves "],
+                aonb: spreadsheet.AONB,
+                sssi: spreadsheet.SSSI
+            }
+
+            function Currency(data) {
+                let v = "£" + str(spreadsheet[data]).replace(/\d{1,3}(?=(\d{3})+(?!\d))/g, "$&,");
+                return v;
+            }
+        }
 
         PlotImageUpload();
 
@@ -485,7 +548,7 @@ function PlotImageUpload() {
             pic.parent(l);
             pic.style('width', '200px');
             pic.style('display', 'block');
-            pic.style('margin-top','20px');
+            pic.style('margin-top', '20px');
         } else {
             pic = null;
         }
