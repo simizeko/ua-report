@@ -10,12 +10,13 @@ let colGap = 50;
 
 // Import variables
 let clientSelect = 0;
+let dropdown;
 let clientList = [];
 let worksheets = {};
 let client = {}
 let sheets;
 let selection;
-let plotImage;
+let plotImage = {};
 
 // Colours
 let lightGray = '#f2f2f2';
@@ -57,7 +58,7 @@ function UpdateDoc() {
         pageMargins: docMargins,
         images: {
             img1: 'https://cdn.jsdelivr.net/gh/simizeko/report-assets@main/images/photo-1471289660181-7feae98d61ae.jpeg',
-            plot: 'https://cdn.jsdelivr.net/gh/simizeko/report-assets@main/images/stockplot.jpeg',
+            plot: plotImage.src,
             logo: 'https://cdn.jsdelivr.net/gh/simizeko/report-assets@main/images/UpAcreStackedRGB.png'
 
         },
@@ -201,7 +202,7 @@ function UpdateDoc() {
             h3("Total Paid to Land Owner"),
             BodySmall("The net profit is then split in a 60% favour of you, the landower. The hurdle rate (which is the estimation of your lands market value), is added to the net-profit to accumulate your grand total."),
             LineTable([
-                "60% Split of Sales",  client.loCut,
+                "60% Split of Sales", client.loCut,
                 "Hurdle Rate", client.hurdleRate
             ]),
             // TwoColumn("Total Net Income for the Landowner", "{{landowner income}}",null, 'TOTAL')
@@ -213,7 +214,7 @@ function UpdateDoc() {
             PageBreak(),
 
             /////////////////////////////
-            // PAGE 4
+            // PAGE 5
             HeaderImage('img1'),
             Title("The Site"),
             { image: "plot", width: fullWidth / 1.5, margin: [0, 0, 0, gap] },
@@ -342,21 +343,23 @@ function UpdateDoc() {
 ///// HTML page ///////
 function setup() {
     select('.p5Canvas').remove();
-    container = createDiv('');
+    container = createDiv('').id('container');
     container.position(0, 0);
-    container.style('width', '100vw');
+    // container.style('min-width', '50%');
     container.style('padding: 40px');
+    container.style('padding-top: 20px');
     container.style('background-color: #f2f2f2');
     // container.style('display: block');
 
     pageTitle('Report Prototype');
-    createP('Please upload the spreadsheet as an .xlsx').parent(container).addClass('Body');
+    createP('Please upload the spreadsheet as an .xlsx').parent(container);
 
     // Find the input in the html and parent to container div
     let upload = select("#file");
     upload.parent(container);
     // let upload = createFileInput().id('file');
     // upload.parent(container);
+
     Init();
     Styles();
 }
@@ -365,7 +368,7 @@ function pageTitle(text) {
     let t = createElement('h1', text);
     t.parent(container);
     t.style('font-family', 'sans-serif');
-    t.style('margin-bottom', '60px');
+    t.style('margin-bottom', '40px');
     t.style('width', '100%');
 }
 
@@ -414,120 +417,216 @@ function Init() {
 }
 
 function ClientDropDown(list) {
-    createP('Please select client number').parent(container).style('margin-top: 40px').addClass('Body');
 
-    let select = createSelect();
-    select.parent(container);
-    select.style('display', 'block');
-    select.style('margin-bottom', '20px');
-    // select.style('margin-top', '20px');
-    select.option('Client Number');
-    select.disable('Client Number');
-    select.selected('Client Number');
+    //// delete everything below dropdown so it stays in the same order
+    DeleteElements('#dropdownText', '#clientDropdown', '.clientInfo', '#submitButton', '#plotImage', '#plotText');
+
+    createP('Please select client number').parent(container).style('margin-top: 40px').id('dropdownText');
+
+    dropdown = createSelect().id('clientDropdown');
+    dropdown.parent(container);
+    dropdown.style('display', 'block');
+    dropdown.style('margin-bottom', '20px');
+    // dropdown.style('margin-top', '20px');
+    dropdown.option('Client Number');
+    dropdown.disable('Client Number');
+    dropdown.selected('Client Number');
 
     for (let i = 0; i < list.length; i++) {
-        select.option(list[i]);
+        dropdown.option(list[i]);
     }
-    select.style('width', '200px');
-    select.changed(UpdateClient);
-
-
-    function UpdateClient() {
-        clientSelect = clientList.indexOf(Number(select.value()));
-
-        ClientObject(worksheets[sheets[Object.keys(worksheets).indexOf('Report')]][clientSelect]);
-
-
-        function ClientObject(spreadsheet) {
-            //// The client object is defined here
-            // client = worksheets[sheets[Object.keys(worksheets).indexOf('Report')]][clientSelect];
-            client = {
-                lpa: spreadsheet.LPA,
-                postcode: spreadsheet.Postcode,
-                accountManager: spreadsheet["Account Manager"],
-                name: spreadsheet["Client Name"],
-                acres: spreadsheet.Acreage,
-                aol: spreadsheet["Acquisition of Land"],
-                yoa: spreadsheet["Year of Acquisition "],
-                clu: spreadsheet["Current Land Use "],
-                rfd: "{{Reason for Diversification}}",
-                proposedProject: spreadsheet["Proposed Project "],
-                projectPartner: spreadsheet["Project Partner"],
-                executiveSummary: spreadsheet["Executive Summary"],
-                income: Currency("Income "),
-                expenditure: Currency("Expenditure"),
-                ownerIncome: Currency("Landowner Income"),
-                strategy: spreadsheet.Strategy,
-                habitats: spreadsheet["The Habitats"],
-                optionAgreement: spreadsheet["Option Agreement"],
-                managementAgreement: spreadsheet["Management Agreement"],
-                loObligation: spreadsheet["Landowner Obligation"],
-                termLength: spreadsheet["Term Length"],
-                sales: Currency("Sales"),
-                mSales: Currency("Management Sales"),
-                mCosts: Currency("Management Costs"),
-                habitatCreation: Currency("Habitat Creation"),
-                salesFee: Currency("Sales Fee"),
-                hurdleRate: Currency("Hurdle Rate"),
-                netProfit: Currency("Net Profit"),
-                loCut: Currency("Landowner Cut"),
-                loIncome: Currency("Landowner Income"),
-                financialSummary: "{{Financial Summary}}",
-                gradeLand: spreadsheet["Agricultural Grade Land"],
-                soilType: spreadsheet["Soil type"],
-                terrain: spreadsheet.Terrain,
-                brownfield: spreadsheet.Brownfield,
-                nearWater: spreadsheet["Near Water"],
-                nearAm: spreadsheet["Near A/M Road"],
-                dfba: spreadsheet["Distance from built up area"],
-                ramsar: spreadsheet.RAMSAR,
-                nationalPark: spreadsheet["National Park"],
-                ancientWoodland: spreadsheet["Ancient Woodland"],
-                floodZone2: spreadsheet["Flood Zone 2"],
-                floodZone3: spreadsheet["Flood Zone 3"],
-                greenbelt: spreadsheet.Greenbelt,
-                prow: spreadsheet.PRoW,
-                listedBuildings: spreadsheet["Listed Buildings"],
-                natureReserve: spreadsheet["Nature Reserves "],
-                aonb: spreadsheet.AONB,
-                sssi: spreadsheet.SSSI
-            }
-
-            function Currency(data) {
-                let v = "£" + str(spreadsheet[data]).replace(/\d{1,3}(?=(\d{3})+(?!\d))/g, "$&,");
-                return v;
-            }
-        }
-
-        PlotImageUpload();
-
-        SubmitButton('Create Report PDF');
-        ClientDisplay();
-        // UpdateData();
-        Styles();
-    }
+    dropdown.style('width', '200px');
+    dropdown.changed(UpdateClient);
 }
 
-function ClientDisplay() {
-    //Clear all client Info text
-    let info = selectAll('.clientInfo');
-    for (let i = 0; i < info.length; i++) {
-        info[i].remove();
+
+function UpdateClient() {
+    clientSelect = clientList.indexOf(Number(dropdown.value()));
+
+    ClientObject(worksheets[sheets[Object.keys(worksheets).indexOf('Report')]][clientSelect]);
+
+
+    function ClientObject(spreadsheet) {
+        //// The client object is defined here
+        // client = worksheets[sheets[Object.keys(worksheets).indexOf('Report')]][clientSelect];
+        client = {
+            lpa: spreadsheet.LPA,
+            postcode: spreadsheet.Postcode,
+            accountManager: spreadsheet["Account Manager"],
+            name: spreadsheet["Client Name"],
+            acres: spreadsheet.Acreage,
+            aol: spreadsheet["Acquisition of Land"],
+            yoa: spreadsheet["Year of Acquisition "],
+            clu: spreadsheet["Current Land Use "],
+            rfd: "{{Reason for Diversification}}",
+            proposedProject: spreadsheet["Proposed Project "],
+            projectPartner: spreadsheet["Project Partner"],
+            executiveSummary: spreadsheet["Executive Summary"],
+            income: Currency("Income "),
+            expenditure: Currency("Expenditure"),
+            ownerIncome: Currency("Landowner Income"),
+            strategy: spreadsheet.Strategy,
+            habitats: spreadsheet["The Habitats"],
+            optionAgreement: spreadsheet["Option Agreement"],
+            managementAgreement: spreadsheet["Management Agreement"],
+            loObligation: spreadsheet["Landowner Obligation"],
+            termLength: spreadsheet["Term Length"],
+            sales: Currency("Sales"),
+            mSales: Currency("Management Sales"),
+            mCosts: Currency("Management Costs"),
+            habitatCreation: Currency("Habitat Creation"),
+            salesFee: Currency("Sales Fee"),
+            hurdleRate: Currency("Hurdle Rate"),
+            netProfit: Currency("Net Profit"),
+            loCut: Currency("Landowner Cut"),
+            loIncome: Currency("Landowner Income"),
+            financialSummary: "{{Financial Summary}}",
+            gradeLand: spreadsheet["Agricultural Grade Land"],
+            soilType: spreadsheet["Soil type"],
+            terrain: spreadsheet.Terrain,
+            brownfield: spreadsheet.Brownfield,
+            nearWater: spreadsheet["Near Water"],
+            nearAm: spreadsheet["Near A/M Road"],
+            dfba: spreadsheet["Distance from built up area"],
+            ramsar: spreadsheet.RAMSAR,
+            nationalPark: spreadsheet["National Park"],
+            ancientWoodland: spreadsheet["Ancient Woodland"],
+            floodZone2: spreadsheet["Flood Zone 2"],
+            floodZone3: spreadsheet["Flood Zone 3"],
+            greenbelt: spreadsheet.Greenbelt,
+            prow: spreadsheet.PRoW,
+            listedBuildings: spreadsheet["Listed Buildings"],
+            natureReserve: spreadsheet["Nature Reserves "],
+            aonb: spreadsheet.AONB,
+            sssi: spreadsheet.SSSI
+        }
+
+        function Currency(data) {
+            let v = "£" + str(spreadsheet[data]).replace(/\d{1,3}(?=(\d{3})+(?!\d))/g, "$&,");
+            return v;
+        }
     }
 
-    createElement('h3', 'Client Info').style('font-family: sans-serif').style('margin-top: 50px').parent(container).addClass('clientInfo');
-    let keys = Object.keys(client);
-    let values = Object.values(client);
-    for (let i = 0; i < Object.entries(client).length; i++) {
-        createP(keys[i] + ":   " + values[i]).style('font-family: sans-serif').parent(container).addClass('clientInfo')
+    PlotImageUpload();
+    SubmitButton('Create Report PDF');
+    ClientDisplay();
+    // UpdateData();
+    Styles();
+}
+
+
+function PlotImageUpload() {
+
+    DeleteElements('#plotImage', '#plotText', '#error');
+
+    let l = createP('Upload a plot image (optional)').parent(container).style('margin-top: 40px').id('plotText');
+    let e = createP('').parent(l).style('color: red').id('error');
+
+    // let imgUpload = createFileInput(HandleImage).id('plotImage');
+    // imgUpload.parent(container);
+
+    let imgUpload = document.createElement('INPUT');
+    imgUpload.setAttribute("type", "file");
+    imgUpload.setAttribute('id', 'plotFile');
+    document.getElementById('container').appendChild(imgUpload);
+
+    let plot = document.getElementById('plotFile');
+    plot.addEventListener("change", function (e) {
+        if (!!plot.files && plot.files.length > 0) {
+
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                plotImage.src = reader.result;
+            }
+            reader.readAsDataURL(e.target.files[0]);
+            console.log(plotImage);
+
+            // let thumbnail = document.createElement('img');
+            // thumbnail.src = 'my_image.jpg';
+            // document.getElementById('container').appendChild(thumbnail);
+
+        }
+    });
+
+    // // const f = document.querySelector("input[type=file]").files[0];
+    // const f = document.querySelectorAll("input[type=file]");
+    // // const f = document.getElementById('plotFile')
+
+    // // console.log(f[1].files[0]);
+    // const reader = new FileReader();
+
+    // reader.addEventListener(
+    //     "load",
+    //     () => {
+    //         // convert image file to base64 string
+    //         // preview.src = reader.result;
+
+    //         plotImage.src = reader.result;
+    //         // console.log(reader.result);
+    //     },
+    //     false,
+    // );
+
+    // if (f[1].files[0]) {
+    //     reader.readAsDataURL(f[1].files[0]);
+    //     console.log(plotImage);
+
+    //     // let thumbnail = document.createElement('img');
+    //     // thumbnail.src = 'my_image.jpg';
+    //     // document.getElementById('container').appendChild(thumbnail);
+    // }
+
+
+    // plot.addEventListener("change", function (e) {
+    //     if (!!plot.files && plot.files.length > 0) {
+    //     }
+    // });
+
+
+    function HandleImage(file) {
+        if (file.type === 'image') {
+            let thumbnail = createImg(file.data, '');
+            thumbnail.parent(l);
+            thumbnail.style('width', '200px');
+            thumbnail.style('display', 'block');
+            thumbnail.style('margin-top', '20px');
+
+            // const preview = document.querySelector("img");
+            // const f = document.querySelector("input[type=file]").files[0];
+            // // const f = imgUpload.value().blob();
+            // const reader = new FileReader();
+
+            // reader.addEventListener(
+            //     "load",
+            //     () => {
+            //         // convert image file to base64 string
+            //         preview.src = reader.result;
+            //     },
+            //     false,
+            // );
+
+            // if (f) {
+            //     plotImage = reader.readAsDataURL(f);
+            // }
+
+
+
+
+            e.html('');
+            select('#submitButton').style('visibility: visible');
+            console.log(plotImage);
+        } else {
+            pic = null;
+            e.html('Please upload a valid .jpeg, .png file');
+            select('#submitButton').style('visibility: hidden');
+        }
     }
 }
 
 function SubmitButton(text) {
-    let buttons = selectAll('#submitButton');
-    for (let i = 0; i < buttons.length; i++) {
-        buttons[i].remove();
-    }
+
+    DeleteElements('#submitButton');
 
     let submit = createButton(text).id('submitButton');
     submit.parent(container);
@@ -537,29 +636,24 @@ function SubmitButton(text) {
     submit.mouseReleased(CreateDocument);
 }
 
-function PlotImageUpload() {
-    let l = createP('Upload a plot image (optional)').parent(container).style('margin-top: 40px').addClass('Body');
-    let imgUpload = createFileInput(HandleImage).id('PlotImage');
-    imgUpload.parent(container);
 
-    function HandleImage(file) {
-        if (file.type === 'image') {
-            let pic = createImg(file.data, '');
-            pic.parent(l);
-            pic.style('width', '200px');
-            pic.style('display', 'block');
-            pic.style('margin-top', '20px');
-        } else {
-            pic = null;
-        }
+function ClientDisplay() {
+    //Clear all client Info text
+    DeleteElements('.clientInfo');
+
+    createElement('h3', 'Client Info').style('font-family: sans-serif').style('margin-top: 50px').parent(container).addClass('clientInfo');
+    let keys = Object.keys(worksheets[sheets[Object.keys(worksheets).indexOf('Report')]][clientSelect]);
+    let values = Object.values(worksheets[sheets[Object.keys(worksheets).indexOf('Report')]][clientSelect]);
+    for (let i = 0; i < Object.entries(worksheets[sheets[Object.keys(worksheets).indexOf('Report')]][clientSelect]).length; i++) {
+        createP(keys[i] + ":   " + values[i]).parent(container).addClass('clientInfo');
     }
 }
 
 
 function Styles() {
-    let b = selectAll('.Body')
+    let b = selectAll('p')
     for (let i = 0; i < b.length; i++) {
-        b[i].style('font-family', 'sans-serif');
+        b[i].style('font-family', 'sans-serif').style('width', '50vw');
     }
 }
 

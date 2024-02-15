@@ -496,6 +496,26 @@ function UpdateValues() {
     //     // console.log(LPA);
 }
 
+function DeleteElements(...selector) {
+
+    for (let i = 0; i < selector.length; i++) {
+        let v = selectAll(selector[i]);
+        for (let j = 0; j < v.length; j++) {
+            v[j].remove();
+        }
+    }
+
+    // let selectors = [];
+    // selectors.push(selector1, selector2, selector3)
+
+    // for (let i = 0; i < selectors.length; i++) {
+    //     let v = selectAll(selectors[i]);
+    //     for (let j = 0; j < v.length; j++) {
+    //         v[j].remove();
+    //     }
+    // }
+}
+
 function CreateDocument() {
     // UpdateValues();
     UpdateDoc();
