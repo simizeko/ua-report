@@ -17,6 +17,7 @@ let client = {}
 let sheets;
 let selection;
 let plotImage = {};
+let showPlotImage = false;
 
 // Colours
 let lightGray = '#f2f2f2';
@@ -63,9 +64,7 @@ function UpdateDoc() {
         pageMargins: docMargins,
         images: {
             img1: 'https://cdn.jsdelivr.net/gh/simizeko/report-assets@main/images/photo-1471289660181-7feae98d61ae.jpeg',
-            plot: plotImage.src,
             logo: 'https://cdn.jsdelivr.net/gh/simizeko/report-assets@main/images/UpAcreStackedRGB.png'
-
         },
         header: {
             // image: 'img1',
@@ -75,10 +74,6 @@ function UpdateDoc() {
         },
         footer: function (currentPage, pageCount, pageSize) {
             // you can apply any logic and return any valid pdfmake element
-
-            // return [
-            //     { text: currentPage, alignment: 'right'}
-            // ]
 
             return {
                 // absolutePosition: { x: 0, y: vh / 2 },
@@ -99,7 +94,7 @@ function UpdateDoc() {
         content: [
             /////////////////////////////
             // PAGE 1
-            HeaderImage('img1'),
+            // HeaderImage('img1'),
             {
                 image: 'logo',
                 width: 140,
@@ -146,7 +141,7 @@ function UpdateDoc() {
 
             /////////////////////////////
             // PAGE 2
-            HeaderImage('img1'),
+            // HeaderImage('img1'),
             Title("Executive Summary"),
             h3("Overview"),
             LineTable([
@@ -198,18 +193,53 @@ function UpdateDoc() {
             TwoColumn('Manage and Monitor', 'Habitats created and the monitoring and management of the site begins.', orange),
 
             LineTable([
-                'Project Strategy', client.strategy,
-                'Habitats', client.habitats,
                 'Options Agreement', client.optionAgreement,
                 'Management Agreement', client.managementAgreement,
                 'Landowner Obligations', client.loObligation,
-                'Term Length', client.termLength
+                'Term Length', client.termLength,
+                'Agreement Type', client.agreementType
             ]),
             PageBreak(),
 
             /////////////////////////////
             // PAGE 4
-            HeaderImage('img1'),
+            // HeaderImage('img1'),
+            Title("The Site"),
+            PlotDisplay('plot'),
+            {
+                columns: [[
+                    h3('Overview of Site'),
+                    LineTable([
+                        "Grade Land", client.gradeLand,
+                        "Soil Type", client.soilType,
+                        "Terrain", client.terrain,
+                        "Greenbelt", client.greenbelt,
+                        "Brownfield", client.brownfield,
+                        "Near Water", client.nearWater,
+                        "Near Main Roads", client.nearAm
+                    ])],
+                [
+                    h3('Distance from Site'),
+                    LineTable([
+                        "Ancient Woodland", client.ancientWoodland,
+                        'Flood Zone 2', client.floodZone2,
+                        "Flood Zone 3", client.floodZone3,
+                        "Public Rights of Way", client.prow,
+                        "Listed Buildings", client.listedBuildings,
+                        "Nature Reserves", client.natureReserve,
+                        "AONB", client.aonb,
+                        "SSSI", client.sssi,
+                        "Built Up Area", client.dfba,
+                        "RAMSAR", client.ramsar,
+                        "National Park", client.nationalPark
+                    ])]
+                ]
+            },
+            PageBreak(),
+
+            /////////////////////////////
+            // PAGE 5
+            // HeaderImage('img1'),
             Title('Financial Forecast'),
             h3('Revenue'),
             BodySmall("Total sales is the income from sales and is based on the assumptions that a unit will be sold for £20,000 and a management cost of £7,000 per-unit created is achieved."),
@@ -234,62 +264,21 @@ function UpdateDoc() {
                 "Hurdle Rate", client.hurdleRate
             ]),
             // TwoColumn("Total Net Income for the Landowner", "{{landowner income}}",null, 'TOTAL')
-            FillTable([
-                "Total Net Income for the Landowner", client.loIncome
-            ]),
+            FillTable(["Total Net Income for the Landowner", client.loIncome], true),
             BodySmall("Please note the above sum is an estimation and could be subject to change."),
-            Body(client.financialSummary),
             PageBreak(),
 
             /////////////////////////////
-            // PAGE 5
-            HeaderImage('img1'),
-            Title("The Site"),
-            { image: "plot", width: fullWidth / 1.5, margin: [0, 0, 0, gap] },
-            // Shape('rect', midGray),
-            // Columns(
-            //    [{text: "lorem ipsum donec sit amet"},
-            //    {text: "Please note the above sum is an estimation and could be subject to change."}]
-            // )
-            {
-                columns: [
-                    LineTable([
-                        "Grade Land", client.gradeLand,
-                        "Soil Type", client.soilType,
-                        "Terrain", client.terrain,
-                        "Brownfield", client.brownfield,
-                        "Near Water", client.nearWater,
-                        "Near Main Roads", client.nearAm,
-                        "Built Up Area", client.dfba,
-                        "RAMSAR", client.ramsar,
-                        "National Park", client.nationalPark
-                    ]),
-                    LineTable([
-                        "Ancient Woodland", client.ancientWoodland,
-                        'Flood Zone 2', client.floodZone2,
-                        "Flood Zone 3", client.floodZone3,
-                        "Greenbelt", client.greenbelt,
-                        "Public Rights of Way", client.prow,
-                        "Listed Buildings", client.listedBuildings,
-                        "Nature Reserves", client.natureReserve,
-                        "AONB", client.aonb,
-                        "SSSI", client.sssi
-                    ])
-                ]
-            },
-            PageBreak(),
-
-            /////////////////////////////
-            // PAGE 5
-            HeaderImage('img1'),
+            // PAGE 6
+            // HeaderImage('img1'),
             Title("Terms & Conditions"),
             TermsAndConditions(),
             BodySmall("By engaging in Up Acre's services, the client agrees to abide by these terms and conditions."),
             PageBreak(),
 
             /////////////////////////////
-            // PAGE 6
-            HeaderImage('img1'),
+            // PAGE 7
+            // HeaderImage('img1'),
             Title("Biodiversity Net Gain: FAQs"),
             {
                 columns: [
@@ -324,7 +313,8 @@ function UpdateDoc() {
                 bold: true,
                 // color: orange,
                 lineHeight: 1,
-                margin: [0, padding, 0, gap]
+                // margin: [0, padding, 0, gap]
+                margin: [0, 0, 0, gap]
             },
             h1: {
                 fontSize: 28,
@@ -351,7 +341,7 @@ function UpdateDoc() {
             body: {
                 fontSize: 9,
                 lineHeight: 1.5,
-                margin: [0, 0, 0, gap]
+                margin: [0, 0, 0, (gap / 3)]
             },
             bodySmall: {
                 fontSize: 8,
@@ -369,6 +359,11 @@ function UpdateDoc() {
             font: 'helvetica',
             columnGap: colGap
         }
+    }
+
+    // Add the plot image to the docDefinition object
+    if (showPlotImage) {
+        docDefinition.images.plot = plotImage.src
     }
 }
 
@@ -557,7 +552,8 @@ function UpdateClient() {
             listedBuildings: spreadsheet["Listed Buildings"],
             natureReserve: spreadsheet["Nature Reserves "],
             aonb: spreadsheet.AONB,
-            sssi: spreadsheet.SSSI
+            sssi: spreadsheet.SSSI,
+            agreementType: spreadsheet["Agreement Type"]
         }
 
         function Currency(data) {
@@ -600,12 +596,6 @@ function PlotImageUpload() {
                 HandleImage(plot.files[0]);
             }
             reader.readAsDataURL(e.target.files[0]);
-            console.log(plotImage);
-
-            // let thumbnail = document.createElement('img');
-            // thumbnail.src = 'my_image.jpg';
-            // document.getElementById('container').appendChild(thumbnail);
-
         }
     });
 
@@ -676,12 +666,13 @@ function PlotImageUpload() {
 
 
             e.html('');
-            select('#submitButton').style('visibility: visible');
-            // console.log(plotImage);
+            // select('#submitButton').style('visibility: visible');
+            showPlotImage = true;
         } else {
             pic = null;
             e.html('Please upload a valid .jpeg or .png file');
-            select('#submitButton').style('visibility: hidden');
+            // select('#submitButton').style('visibility: hidden');
+            showPlotImage = false;
         }
     }
 }

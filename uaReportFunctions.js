@@ -136,9 +136,10 @@ function LineTable(values, total) {
                 return 0;
             },
             paddingRight: function paddingRight(i, node) {
-                //   return i === node.table.widths.length - 1 ? 0 : 8;
+                //   return i === node.table.widths.length - 1 ? 0 : 20;
                 // return 30;
-                return 20;
+                // return 20;
+                return 15;
             },
             paddingTop: function paddingTop(i, node) {
                 //   return i === node.table.widths.length - 1 ? 0 : 8;
@@ -153,6 +154,7 @@ function LineTable(values, total) {
             // }
         },
         style: 'body',
+        lineHeight: 1.25,
         table: {
             headerRows: 0,
             widths: ['auto', '*'],
@@ -181,7 +183,7 @@ function LineTable(values, total) {
     }
 }
 
-function FillTable(values) {
+function FillTable(values, total) {
     // v = v.filter(Boolean); // remove all the undefined values
     let pad = 8
     let l = {
@@ -201,7 +203,7 @@ function FillTable(values) {
                 return pad;
             },
             paddingRight: function paddingRight(i, node) {
-                return pad / 2;
+                return pad;
             },
             paddingTop: function paddingTop(i, node) {
                 return pad;
@@ -225,7 +227,10 @@ function FillTable(values) {
     function LoopValues() {
         let rows = [];
         for (let i = 0; i < values.length; i += 2) {
-            let r = [{ bold: true, text: values[i] }, { text: values[i + 1] }]
+            let r = [{ bold: true, text: values[i] }, { text: values[i + 1] }];
+            if (total) {
+                r[1].bold = true;
+            };
             rows.push(r);
         }
         return rows;
@@ -250,6 +255,7 @@ function TwoColumn(column1, column2, color, total) {
     }
     let c = {
         style: 'body',
+        margin: [0, 0, 0, gap],
         table: {
             headerRows: 0,
             widths: [columnWidth, secondWidth],
@@ -310,13 +316,24 @@ function Arrow(color) {
 }
 
 function HeaderImage(imagery) {
-    let pic = {
-        image: imagery,
-        absolutePosition: { x: 0, y: 0 },
-        // width: 10,
-        cover: { width: vw, height: padding, valign: "center", align: "center" }
-    };
-    return pic;
+    if (showPlotImage === false) {
+        return;
+    } else {
+        let pic = {
+            image: imagery,
+            absolutePosition: { x: 0, y: 0 },
+            // width: 10,
+            cover: { width: vw, height: padding, valign: "center", align: "center" }
+        };
+        return pic;
+    }
+}
+
+function PlotDisplay(image) {
+    if (showPlotImage) {
+        let img = { image: image, width: fullWidth / 1.5, margin: [0, 0, 0, gap] };
+        return img;
+    }
 }
 
 function Shape(type, color) {
