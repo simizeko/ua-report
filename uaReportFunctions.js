@@ -137,7 +137,8 @@ function LineTable(values, total) {
             },
             paddingRight: function paddingRight(i, node) {
                 //   return i === node.table.widths.length - 1 ? 0 : 8;
-                return 30;
+                // return 30;
+                return 20;
             },
             paddingTop: function paddingTop(i, node) {
                 //   return i === node.table.widths.length - 1 ? 0 : 8;

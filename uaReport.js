@@ -24,6 +24,11 @@ let midGray = '#e6e6e6';
 let darkGray = '#666666';
 let orange = '#fc8124';
 
+//// HTML variables
+let page;
+let container;
+let infoContainer;
+
 //// Input variables
 // let container;
 // let LPA = { q: 'Land Planning Authority:', id: 'lpa', a: '' };
@@ -68,6 +73,29 @@ function UpdateDoc() {
             // width: vw,
             // height: padding
         },
+        footer: function (currentPage, pageCount, pageSize) {
+            // you can apply any logic and return any valid pdfmake element
+
+            // return [
+            //     { text: currentPage, alignment: 'right'}
+            // ]
+
+            return {
+                // absolutePosition: { x: 0, y: vh / 2 },
+                width: vw,
+                style: 'folio',
+                columns: [
+                    { text: 'upacre.co.uk', alignment: 'left', width: '*' },
+                    { text: currentPage + ' of ' + pageCount, alignment: 'right', width: '*' }
+                ]
+            }
+        },
+        // footer: {
+        //     columns: [
+        //         function (currentPage, pageCount) { return currentPage.toString() + ' of ' + pageCount; },
+        //         { text: 'upacre.co.uk', alignment: 'right', style: 'body' }
+        //     ]
+        // },
         content: [
             /////////////////////////////
             // PAGE 1
@@ -331,6 +359,11 @@ function UpdateDoc() {
                 color: darkGray,
                 margin: [0, -(gap / 3), (vw / 4), (gap / 3.5)]
             },
+            folio: {
+                fontSize: 8,
+                color: darkGray,
+                margin: [docMargins / 2, 0, docMargins / 2, 0]
+            }
         },
         defaultStyle: {
             font: 'helvetica',
@@ -343,22 +376,48 @@ function UpdateDoc() {
 ///// HTML page ///////
 function setup() {
     select('.p5Canvas').remove();
+
+    page = createDiv('');
+    page.position(0, 0);
+    // page.style('width: 100%');
+    // page.style('background-color: #5ad1ad');
+    // page.style('overflow: hidden');
+    // page.style('display: inline-block')
+
     container = createDiv('').id('container');
-    container.position(0, 0);
+    // container.position(0, 0);
     // container.style('min-width', '50%');
+    // container.style('width: 50%')
+    container.parent(page);
     container.style('padding: 40px');
     container.style('padding-top: 20px');
     container.style('background-color: #f2f2f2');
+    container.style('float: left');
+    // container.style('position: relative');
     // container.style('display: block');
+
+    infoContainer = createDiv('');
+    infoContainer.parent(page);
+    infoContainer.style('padding: 40px');
+    infoContainer.style('padding-top: 0px');
+    // infoContainer.style('background-color: #cdcdcd');
+    // infoContainer.style('width: 50%');
+    infoContainer.style('display: inline-block');
+
 
     pageTitle('Report Prototype');
     createP('Please upload the spreadsheet as an .xlsx').parent(container);
 
     // Find the input in the html and parent to container div
-    let upload = select("#file");
-    upload.parent(container);
+    // let upload = select("#file");
+    // upload.parent(container);
     // let upload = createFileInput().id('file');
     // upload.parent(container);
+
+    let upload = document.createElement('INPUT');
+    upload.setAttribute("type", "file");
+    upload.setAttribute("id", "file");
+    document.getElementById('container').appendChild(upload);
 
     Init();
     Styles();
@@ -369,7 +428,7 @@ function pageTitle(text) {
     t.parent(container);
     t.style('font-family', 'sans-serif');
     t.style('margin-bottom', '40px');
-    t.style('width', '100%');
+    // t.style('width', '100%');
 }
 
 function Init() {
@@ -502,7 +561,7 @@ function UpdateClient() {
         }
 
         function Currency(data) {
-            let v = "£" + str(spreadsheet[data]).replace(/\d{1,3}(?=(\d{3})+(?!\d))/g, "$&,");
+            let v = "£ " + str(spreadsheet[data]).replace(/\d{1,3}(?=(\d{3})+(?!\d))/g, "$&,");
             return v;
         }
     }
@@ -517,7 +576,7 @@ function UpdateClient() {
 
 function PlotImageUpload() {
 
-    DeleteElements('#plotImage', '#plotText', '#error');
+    DeleteElements('#plotImage', '#plotText', '#plotFile', '#error');
 
     let l = createP('Upload a plot image (optional)').parent(container).style('margin-top: 40px').id('plotText');
     let e = createP('').parent(l).style('color: red').id('error');
@@ -538,6 +597,7 @@ function PlotImageUpload() {
 
             reader.onload = function (e) {
                 plotImage.src = reader.result;
+                HandleImage(plot.files[0]);
             }
             reader.readAsDataURL(e.target.files[0]);
             console.log(plotImage);
@@ -585,8 +645,10 @@ function PlotImageUpload() {
 
 
     function HandleImage(file) {
-        if (file.type === 'image') {
-            let thumbnail = createImg(file.data, '');
+        DeleteElements('#plotImage');
+        if (file.type === 'image' || file.type === 'image/jpeg' || file.type === 'image/png') {
+            // let thumbnail = createImg(file.data, '');
+            let thumbnail = createImg(plotImage.src, '').id('plotImage');
             thumbnail.parent(l);
             thumbnail.style('width', '200px');
             thumbnail.style('display', 'block');
@@ -615,14 +677,15 @@ function PlotImageUpload() {
 
             e.html('');
             select('#submitButton').style('visibility: visible');
-            console.log(plotImage);
+            // console.log(plotImage);
         } else {
             pic = null;
-            e.html('Please upload a valid .jpeg, .png file');
+            e.html('Please upload a valid .jpeg or .png file');
             select('#submitButton').style('visibility: hidden');
         }
     }
 }
+
 
 function SubmitButton(text) {
 
@@ -641,11 +704,11 @@ function ClientDisplay() {
     //Clear all client Info text
     DeleteElements('.clientInfo');
 
-    createElement('h3', 'Client Info').style('font-family: sans-serif').style('margin-top: 50px').parent(container).addClass('clientInfo');
+    createElement('h3', 'Client Info').style('font-family: sans-serif').style('margin-top: 50px').parent(infoContainer).addClass('clientInfo');
     let keys = Object.keys(worksheets[sheets[Object.keys(worksheets).indexOf('Report')]][clientSelect]);
     let values = Object.values(worksheets[sheets[Object.keys(worksheets).indexOf('Report')]][clientSelect]);
     for (let i = 0; i < Object.entries(worksheets[sheets[Object.keys(worksheets).indexOf('Report')]][clientSelect]).length; i++) {
-        createP(keys[i] + ":   " + values[i]).parent(container).addClass('clientInfo');
+        createP(keys[i] + ":   " + values[i]).parent(infoContainer).addClass('clientInfo');
     }
 }
 
@@ -653,7 +716,7 @@ function ClientDisplay() {
 function Styles() {
     let b = selectAll('p')
     for (let i = 0; i < b.length; i++) {
-        b[i].style('font-family', 'sans-serif').style('width', '50vw');
+        b[i].style('font-family', 'sans-serif').style('max-width: 50vw');
     }
 }
 
