@@ -6,7 +6,7 @@ let padding = vh / 6;
 let docDefinition;
 let fullWidth = vw - (docMargins * 2);
 let gap = 30;
-let colGap = 50;
+let colGap = 40;
 
 // Import variables
 let clientSelect = 0;
@@ -23,8 +23,14 @@ let showPlotImage = false;
 let lightGray = '#f2f2f2';
 let midGray = '#e6e6e6';
 let darkGray = '#666666';
-let orange = '#fc8124';
-
+let orange = {
+    t100: '#fc8124',
+    t90: '#fc8a33',
+    t80: '#fc9343',
+    t70: '#fd9b52',
+    t60: '#fda461',
+    t50: '#fdad71'
+}
 //// HTML variables
 let page;
 let container;
@@ -64,7 +70,8 @@ function UpdateDoc() {
         pageMargins: docMargins,
         images: {
             img1: 'https://cdn.jsdelivr.net/gh/simizeko/report-assets@main/images/photo-1471289660181-7feae98d61ae.jpeg',
-            logo: 'https://cdn.jsdelivr.net/gh/simizeko/report-assets@main/images/UpAcreStackedRGB.png'
+            logo: 'https://cdn.jsdelivr.net/gh/simizeko/report-assets@main/images/UpAcreStackedRGB.png',
+            signature: 'https://cdn.jsdelivr.net/gh/simizeko/ua-report@main/placeholder/signature.png'
         },
         header: {
             // image: 'img1',
@@ -126,16 +133,25 @@ function UpdateDoc() {
                 margin: [0, 0, 0, 0]
             },
             {
+                image: 'signature',
+                width: 100,
+                alignment: 'center',
+                margin: [0, gap / 2, 0, 0]
+            },
+            {
                 text: 'This entire Document is strictly Private and Confidential',
                 style: 'body',
                 alignment: 'center',
                 bold: true,
-                margin: [0, 230, 0, 0]
+                absolutePosition: { x: docMargins, y: (vh - 60) - 15 },
+                margin: [0, 0, 0, 0]
             },
             {
                 text: 'Up Acre Limited, Studio 2, 92 Lots Road, Chelsea, London, SW10 0QD',
                 style: 'body',
                 alignment: 'center',
+                absolutePosition: { x: docMargins, y: (vh - 60) },
+                margin: [0, 0, 0, 0],
                 pageBreak: 'after'
             },
 
@@ -180,17 +196,17 @@ function UpdateDoc() {
             // PAGE 3
             HeaderImage('plot'),
             Title('Project Outline'),
-            TwoColumn('Report', 'Desk survey and ecological forecasting.'),
-            Arrow(midGray),
-            TwoColumn('Site Visit', 'Discussion of the BNG strategy and NDA.'),
-            Arrow(midGray),
-            TwoColumn('Legals', 'Signing and negotiating of all legal documents.'),
-            Arrow(midGray),
-            TwoColumn('Sell Units', 'Marketing of site to appropriate developers seeking planning.'),
-            Arrow(midGray),
-            TwoColumn('Trigger Lease', 'The 33 year lease begins and all parties get paid.'),
-            Arrow(midGray),
-            TwoColumn('Manage and Monitor', 'Habitats created and the monitoring and management of the site begins.', orange),
+            TwoColumn('Report', 'Desk survey and ecological forecasting.', orange.t50),
+            Arrow(orange.t50),
+            TwoColumn('Site Visit', 'Discussion of the BNG strategy and NDA.', orange.t60),
+            Arrow(orange.t60),
+            TwoColumn('Legals', 'Signing and negotiating of all legal documents.', orange.t70),
+            Arrow(orange.t70),
+            TwoColumn('Sell Units', 'Marketing of site to appropriate developers seeking planning.', orange.t80),
+            Arrow(orange.t80),
+            TwoColumn('Trigger Lease', 'The 33 year lease begins and all parties get paid.', orange.t90),
+            Arrow(orange.t90),
+            TwoColumn('Manage and Monitor', 'Habitats created and the monitoring and management of the site begins.', orange.t100),
 
             LineTable([
                 'Options Agreement', client.optionAgreement,
@@ -203,6 +219,26 @@ function UpdateDoc() {
 
             /////////////////////////////
             // PAGE 4
+            // HeaderImage('plot'),
+            Title('Project Partner'),
+            {
+                margin: [0, 0, 0, gap / 2],
+                columns: [
+                    PartnerLogo('logo'),
+                    [h3(client.projectPartner), Body(client.aboutPartner), Body(client.partnerInfo),]
+                ]
+            },
+            h3('Proposed Project Strategy'),
+            {
+                columns: [
+                    { image: 'img1', width: vw / 2.5 },
+                    [h4("Habitats"), Body(client.habitats), Body(client.strategy)]
+                ]
+            },
+            PageBreak(),
+
+            /////////////////////////////
+            // PAGE 5
             // HeaderImage('img1'),
             Title("The Site"),
             PlotDisplay('plot'),
@@ -238,7 +274,7 @@ function UpdateDoc() {
             PageBreak(),
 
             /////////////////////////////
-            // PAGE 5
+            // PAGE 6
             // HeaderImage('img1'),
             Title('Financial Forecast'),
             h3('Revenue'),
@@ -269,7 +305,7 @@ function UpdateDoc() {
             PageBreak(),
 
             /////////////////////////////
-            // PAGE 6
+            // PAGE 7
             // HeaderImage('img1'),
             Title("Terms & Conditions"),
             TermsAndConditions(),
@@ -277,7 +313,7 @@ function UpdateDoc() {
             PageBreak(),
 
             /////////////////////////////
-            // PAGE 7
+            // PAGE 8
             // HeaderImage('img1'),
             Title("Biodiversity Net Gain: FAQs"),
             {
@@ -291,7 +327,7 @@ function UpdateDoc() {
                     ],
                     [
                         h4body("How much does the Landowner receive?", "If the Landowner inputs over 20 acres of land, they will receive an upfront payment. The amount is typically £15,000 - £30,000 per acre. £10,000 is the agricultural value of the land, and the remainder is half the HU value of the land. The other half is the amount the developer takes.\n\nLand under 20 acres is more complicated and can range from £300 - £600 per acre per annum over 30 years. This is only if you decide to go with a leased land bank agreement."),
-                        h4("An Example of how it works", orange),
+                        h4("An Example of how it works", orange.t100),
                         NumberList([
                             "A housebuilder builds 100 homes but, in the process, destroys an ancient bog (or something equivalent).",
                             "The housebuilder hires an ecologist to calculate the environmental damage this has caused. The Ecologist uses the Habitat Units to show the extent of damage done to the bog. (for this, we will say they score - 10 Habitat Units)",
@@ -329,14 +365,14 @@ function UpdateDoc() {
             },
             h3: {
                 fontSize: 14,
-                color: orange,
+                color: orange.t100,
                 bold: true,
-                margin: [0, 0, 0, (gap / 2)]
+                margin: [0, gap / 2, 0, (gap / 2)]
             },
             h4: {
                 fontSize: 9,
                 bold: true,
-                margin: [0, 0, 0, 0]
+                margin: [0, 0, 0, gap / 7]
             },
             body: {
                 fontSize: 9,
@@ -520,7 +556,7 @@ function UpdateClient() {
             expenditure: Currency("Expenditure"),
             ownerIncome: Currency("Landowner Income"),
             strategy: spreadsheet.Strategy,
-            habitats: spreadsheet["The Habitats"],
+            habitats: List("Habitats"),
             optionAgreement: spreadsheet["Option Agreement"],
             managementAgreement: spreadsheet["Management Agreement"],
             loObligation: spreadsheet["Landowner Obligation"],
@@ -545,20 +581,27 @@ function UpdateClient() {
             ramsar: spreadsheet.RAMSAR,
             nationalPark: spreadsheet["National Park"],
             ancientWoodland: spreadsheet["Ancient Woodland"],
-            floodZone2: spreadsheet["Flood Zone 2"],
-            floodZone3: spreadsheet["Flood Zone 3"],
+            floodZone: spreadsheet["Flood Zone "],
             greenbelt: spreadsheet.Greenbelt,
             prow: spreadsheet.PRoW,
             listedBuildings: spreadsheet["Listed Buildings"],
             natureReserve: spreadsheet["Nature Reserves "],
             aonb: spreadsheet.AONB,
             sssi: spreadsheet.SSSI,
-            agreementType: spreadsheet["Agreement Type"]
+            agreementType: '{{ Agreement Type }}',
+            aboutPartner: '{{ About Prject Partner }}',
+            partnerInfo: '{{ Further Partner Information }}',
         }
 
         function Currency(data) {
-            let v = "£ " + str(spreadsheet[data]).replace(/\d{1,3}(?=(\d{3})+(?!\d))/g, "$&,");
-            return v;
+            let value = "£ " + str(spreadsheet[data]).replace(/\d{1,3}(?=(\d{3})+(?!\d))/g, "$&,");
+            return value;
+        }
+
+        function List(data) {
+            let list = str(spreadsheet[data]).replace(/(\d+)\u002E/g, '\n$1\u002E');
+            let removeFirstLineBreak = list.replace('\n', '');
+            return removeFirstLineBreak;
         }
     }
 

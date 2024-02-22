@@ -67,17 +67,17 @@ function NumberList(values) {
     return l;
 }
 
-function h4body(h3text, bodytext) {
+function h4body(h4text, bodytext) {
     let t = {
-        text: h3text,
+        text: h4text,
         style: 'h4',
-        color: orange,
+        color: orange.t100,
         margin: [0, 0, 0, 0.5]
     };
     let b = {
         text: bodytext,
         style: 'body',
-        lineHeight: 1.15,
+        lineHeight: 1.25,
         margin: [0, 0, 0, gap / 2]
     };
     return [t, b];
@@ -120,10 +120,10 @@ function LineTable(values, total) {
                 //   return i === 1 ? 'black' : '#aaa';
                 if (total) {
                     if (rowIndex === (values.length / 2 - 1)) {
-                        return orange;
+                        return orange.t100;
                     }
                     if (rowIndex === (values.length / 2)) {
-                        return orange;
+                        return orange.t100;
                     } else {
                         return midGray;
                     }
@@ -150,7 +150,7 @@ function LineTable(values, total) {
                 return pad / 2;
             },
             // fillColor: function (rowIndex, node, columnIndex) {
-            //     return (rowIndex === (values.length / 2) - 1) ? orange : null;
+            //     return (rowIndex === (values.length / 2) - 1) ? orange.t100 : null;
             // }
         },
         style: 'body',
@@ -336,6 +336,11 @@ function PlotDisplay(image) {
     }
 }
 
+function PartnerLogo(image) {
+    let img = { image: image, width: 90, margin: [0, gap / 2, 0, gap], alignment: 'left' }
+    return img;
+}
+
 function Shape(type, color) {
     let s = {
         margin: [0, 0, 0, gap],
@@ -383,14 +388,15 @@ function PageBreak() {
 }
 
 function TermsAndConditions() {
+    let space = 12;
     let tc = {
         style: 'body',
-        lineHeight: 1.1,
-        margin: [0, 0, 130, gap / 2],
+        lineHeight: 1.25,
+        margin: [0, 0, 130, gap / 2.5],
         ol: [
             h4('Introduction'),
             {
-                margin: [0, 0, 0, 5],
+                margin: [0, 0, 0, space],
                 separator: ['1.', ''],
                 ol: [
                     "Up Acre Ltd. ('Up Acre') specialises in alternative land diversification for farmers and landowners."
@@ -398,7 +404,7 @@ function TermsAndConditions() {
             },
             h4('Reports and Advice'),
             {
-                margin: [0, 0, 0, 5],
+                margin: [0, 0, 0, space],
                 separator: ['2.', ''],
                 ol: [
                     "Up Acre provides reports based on predictions and estimations. These reports are generic advice and should not be considered as absolute guarantees.",
@@ -407,7 +413,7 @@ function TermsAndConditions() {
             },
             h4('Remuneration'),
             {
-                margin: [0, 0, 0, 5],
+                margin: [0, 0, 0, space],
                 separator: ['3.', ''],
                 ol: [
                     "Up Acre is typically remunerated by the Project Partner at a rate of 2% of the net profit on a finders fee.",
@@ -416,7 +422,7 @@ function TermsAndConditions() {
             },
             h4('Confidentiality'),
             {
-                margin: [0, 0, 0, 5],
+                margin: [0, 0, 0, space],
                 separator: ['4.', ''],
                 ol: [
                     "Up Acre acknowledges that the information provided by clients may be sensitive and confidential.",
@@ -425,7 +431,7 @@ function TermsAndConditions() {
             },
             h4('Limitation of Liability'),
             {
-                margin: [0, 0, 0, 5],
+                margin: [0, 0, 0, space],
                 separator: ['5.', ''],
                 ol: [
                     "Up Acre shall not be liable for any direct, indirect, incidental, consequential, or exemplary damages arising from the use of its services.",
@@ -434,7 +440,7 @@ function TermsAndConditions() {
             },
             h4('Client Responsibilities'),
             {
-                margin: [0, 0, 0, 5],
+                margin: [0, 0, 0, space],
                 separator: ['6.', ''],
                 ol: [
                     "Clients are responsible for verifying the accuracy and completeness of the information provided by Up Acre.",
@@ -443,7 +449,7 @@ function TermsAndConditions() {
             },
             h4('Termination of Services'),
             {
-                margin: [0, 0, 0, 5],
+                margin: [0, 0, 0, space],
                 separator: ['7.', ''],
                 ol: [
                     "Either party may terminate the services provided by Up Acre at any given time."
@@ -451,7 +457,7 @@ function TermsAndConditions() {
             },
             h4('Governing Law'),
             {
-                margin: [0, 0, 0, 5],
+                margin: [0, 0, 0, space],
                 separator: ['8.', ''],
                 ol: [
                     "These terms and conditions are governed by the laws of England and any disputes shall be resolved in the appropriate courts of England."
@@ -459,7 +465,7 @@ function TermsAndConditions() {
             },
             h4('Amendment of Terms'),
             {
-                margin: [0, 0, 0, 5],
+                margin: [0, 0, 0, space],
                 separator: ['9.', ''],
                 ol: [
                     "Up Acre reserves the right to amend these terms and conditions at any time.",
@@ -468,7 +474,7 @@ function TermsAndConditions() {
             },
             h4('Miscellaneous'),
             {
-                margin: [0, 0, 0, 5],
+                margin: [0, 0, 0, space],
                 separator: ['10.', ''],
                 ol: [
                     "These terms and conditions constitute the entire agreement between Up Acre and the client.",
@@ -480,39 +486,39 @@ function TermsAndConditions() {
     return tc;
 }
 
-function UpdateValues() {
-    LPA.a = Answer(LPA.id);
-    postcode.a = Answer(postcode.id)
-    accountManager.a = Answer(accountManager.id);
-    projectPartner.a = Answer(projectPartner.id);
-    landOwner.a = Answer(landOwner.id);
-    acreage.a = Answer(acreage.id);
-    acquisitionOfLand.a = Answer(acquisitionOfLand.id);
-    yearOfAcquisition.a = Answer(yearOfAcquisition.id);
-    currentLandUse.a = Answer(currentLandUse.id);
-    reasonForDiversification.a = Answer(reasonForDiversification.id);
-    proposedProject.a = Answer(proposedProject.id);
-    income.a = Answer(income.id);
-    expenditure.a = Answer(expenditure.id);
-    landOwnerIncome.a = Answer(landOwnerIncome.id);
+// function UpdateValues() {
+//     LPA.a = Answer(LPA.id);
+//     postcode.a = Answer(postcode.id)
+//     accountManager.a = Answer(accountManager.id);
+//     projectPartner.a = Answer(projectPartner.id);
+//     landOwner.a = Answer(landOwner.id);
+//     acreage.a = Answer(acreage.id);
+//     acquisitionOfLand.a = Answer(acquisitionOfLand.id);
+//     yearOfAcquisition.a = Answer(yearOfAcquisition.id);
+//     currentLandUse.a = Answer(currentLandUse.id);
+//     reasonForDiversification.a = Answer(reasonForDiversification.id);
+//     proposedProject.a = Answer(proposedProject.id);
+//     income.a = Answer(income.id);
+//     expenditure.a = Answer(expenditure.id);
+//     landOwnerIncome.a = Answer(landOwnerIncome.id);
 
-    function Answer(id) {
-        let answer = select('#' + id);
-        return answer.value();
-    }
+//     function Answer(id) {
+//         let answer = select('#' + id);
+//         return answer.value();
+//     }
 
 
-    //     // reset array
-    //     // answers = [];
+//     //     // reset array
+//     //     // answers = [];
 
-    //     // select all values from the inputs and add to array
-    //     // let a = selectAll('.answers')
-    //     // for (let i = 0; i < a.length; i++) {
-    //     //     answers.push(a[i].value())
-    //     // }
-    //     // LPA = Input(LPAinput)
-    //     // console.log(LPA);
-}
+//     //     // select all values from the inputs and add to array
+//     //     // let a = selectAll('.answers')
+//     //     // for (let i = 0; i < a.length; i++) {
+//     //     //     answers.push(a[i].value())
+//     //     // }
+//     //     // LPA = Input(LPAinput)
+//     //     // console.log(LPA);
+// }
 
 function DeleteElements(...selector) {
 
