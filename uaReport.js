@@ -16,7 +16,7 @@ let worksheets = {};
 let client = {}
 let sheets;
 let selection;
-let plotImage = {};
+let plotImage = { link1: null, link2: null };
 let showPlotImage = false;
 
 // Colours
@@ -194,7 +194,7 @@ function UpdateDoc() {
 
             /////////////////////////////
             // PAGE 3
-            HeaderImage('plot'),
+            // HeaderImage('plot'),
             Title('Project Outline'),
             TwoColumn('Report', 'Desk survey and ecological forecasting.', orange.t50),
             Arrow(orange.t50),
@@ -241,7 +241,8 @@ function UpdateDoc() {
             // PAGE 5
             // HeaderImage('img1'),
             Title("The Site"),
-            PlotDisplay('plot'),
+            PlotDisplay('plot1'),
+            // PlotDisplay('plot2'),
             {
                 columns: [[
                     h3('Overview of Site'),
@@ -399,7 +400,8 @@ function UpdateDoc() {
 
     // Add the plot image to the docDefinition object
     if (showPlotImage) {
-        docDefinition.images.plot = plotImage.src
+        docDefinition.images.plot1 = plotImage.link1;
+        // docDefinition.images.plot2 = plotImage.link2;
     }
 }
 
@@ -509,7 +511,7 @@ function Init() {
 function ClientDropDown(list) {
 
     //// delete everything below dropdown so it stays in the same order
-    DeleteElements('#dropdownText', '#clientDropdown', '.clientInfo', '#submitButton', '#plotImage', '#plotText');
+    DeleteElements('#dropdownText', '#clientDropdown', '.clientInfo', '#submitButton', '#plotImage0', '#plotImage1', '#plotText');
 
     createP('Please select client number').parent(container).style('margin-top: 40px').id('dropdownText');
 
@@ -615,32 +617,34 @@ function UpdateClient() {
 
 function PlotImageUpload() {
 
-    DeleteElements('#plotImage', '#plotText', '#plotFile', '#error');
+    DeleteElements('#plotImage0', '#plotImage1', '#plotText', '#plotFile0', '#plotFile1', '#error');
 
-    let l = createP('Upload a plot image (optional)').parent(container).style('margin-top: 40px').id('plotText');
+    let l = createP('Upload plot images (optional)').parent(container).style('margin-top: 40px').id('plotText');
     let e = createP('').parent(l).style('color: red').id('error');
 
     // let imgUpload = createFileInput(HandleImage).id('plotImage');
     // imgUpload.parent(container);
 
-    let imgUpload = document.createElement('INPUT');
-    imgUpload.setAttribute("type", "file");
-    imgUpload.setAttribute('id', 'plotFile');
-    document.getElementById('container').appendChild(imgUpload);
+    for (let i = 0; i < 2; i++) {
+        let imgUpload = document.createElement('INPUT');
+        imgUpload.setAttribute("type", "file");
+        imgUpload.setAttribute('id', 'plotFile' + i);
+        document.getElementById('container').appendChild(imgUpload);
 
-    let plot = document.getElementById('plotFile');
-    plot.addEventListener("change", function (e) {
-        if (!!plot.files && plot.files.length > 0) {
+        let plot = document.getElementById('plotFile' + i);
+        plot.addEventListener("change", function (e) {
+            if (!!plot.files && plot.files.length > 0) {
 
-            var reader = new FileReader();
+                var reader = new FileReader();
 
-            reader.onload = function (e) {
-                plotImage.src = reader.result;
-                HandleImage(plot.files[0]);
+                reader.onload = function (e) {
+                    plotImage[i] = reader.result;
+                    HandleImage(plot.files[0], i);
+                }
+                reader.readAsDataURL(e.target.files[0]);
             }
-            reader.readAsDataURL(e.target.files[0]);
-        }
-    });
+        });
+    }
 
     // // const f = document.querySelector("input[type=file]").files[0];
     // const f = document.querySelectorAll("input[type=file]");
@@ -677,15 +681,17 @@ function PlotImageUpload() {
     // });
 
 
-    function HandleImage(file) {
-        DeleteElements('#plotImage');
+    function HandleImage(file, index) {
+        DeleteElements('#plotImage' + index);
         if (file.type === 'image' || file.type === 'image/jpeg' || file.type === 'image/png') {
             // let thumbnail = createImg(file.data, '');
-            let thumbnail = createImg(plotImage.src, '').id('plotImage');
+            let thumbnail = createImg(plotImage[index], '').id('plotImage');
             thumbnail.parent(l);
             thumbnail.style('width', '200px');
-            thumbnail.style('display', 'block');
+            thumbnail.style('display', 'inline');
             thumbnail.style('margin-top', '20px');
+            thumbnail.style('margin-right: 20px');
+            console.log(index);
 
             // const preview = document.querySelector("img");
             // const f = document.querySelector("input[type=file]").files[0];
@@ -750,7 +756,9 @@ function ClientDisplay() {
 function Styles() {
     let b = selectAll('p')
     for (let i = 0; i < b.length; i++) {
-        b[i].style('font-family', 'sans-serif').style('max-width: 50vw');
+        b[i].style('font-family', 'sans-serif');
+        b[i].style('max-width: 40vw');
+        // b[i].style('background-color: red');
     }
 }
 
