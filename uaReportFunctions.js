@@ -329,11 +329,25 @@ function HeaderImage(imagery) {
     }
 }
 
-function PlotDisplay(image) {
-    if (showPlotImage) {
-        let img = { image: image, width: fullWidth / 1.5, margin: [0, 0, 0, gap] };
+function PlotDisplay(image1, image2) {
+    if (showPlotImage.value1 && !showPlotImage.value2) {
+        let img = { image: image1, width: fullWidth / 1.5, margin: [0, 0, 0, gap] };
         return img;
     }
+
+    if (showPlotImage.value1 && showPlotImage.value2) {
+        let imgs = {
+            margin: [0, 0, 0, gap],
+            columnGap: 10,
+            columns: [
+                { image: image1, width: fullWidth / 2 },
+                { image: image2, width: fullWidth / 2 }
+                // { text: 'upacre.co.uk', alignment: 'left', width: '*' },
+                // { text: currentPage + ' of ' + pageCount, alignment: 'right', width: '*' }
+            ]
+    }
+    return imgs;
+}
 }
 
 function PartnerLogo(image) {
@@ -388,7 +402,7 @@ function PageBreak() {
 }
 
 function TermsAndConditions() {
-    let space = 12;
+    let space = 10;
     let tc = {
         style: 'body',
         lineHeight: 1.25,

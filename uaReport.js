@@ -17,7 +17,7 @@ let client = {}
 let sheets;
 let selection;
 let plotImage = { link1: null, link2: null };
-let showPlotImage = false;
+let showPlotImage = { value1: false, value2: false };
 
 // Colours
 let lightGray = '#f2f2f2';
@@ -70,7 +70,7 @@ function UpdateDoc() {
         pageMargins: docMargins,
         images: {
             img1: 'https://cdn.jsdelivr.net/gh/simizeko/report-assets@main/images/photo-1471289660181-7feae98d61ae.jpeg',
-            logo: 'https://cdn.jsdelivr.net/gh/simizeko/report-assets@main/images/UpAcreStackedRGB.png',
+            logo: 'https://cdn.jsdelivr.net/gh/simizeko/ua-report@main/placeholder/biofarmLogo.png',
             signature: 'https://cdn.jsdelivr.net/gh/simizeko/ua-report@main/placeholder/signature.png'
         },
         header: {
@@ -241,7 +241,7 @@ function UpdateDoc() {
             // PAGE 5
             // HeaderImage('img1'),
             Title("The Site"),
-            PlotDisplay('plot1'),
+            PlotDisplay('plot1', 'plot2'),
             // PlotDisplay('plot2'),
             {
                 columns: [[
@@ -373,7 +373,7 @@ function UpdateDoc() {
             h4: {
                 fontSize: 9,
                 bold: true,
-                margin: [0, 0, 0, gap / 7]
+                margin: [0, 0, 0, 0.5]
             },
             body: {
                 fontSize: 9,
@@ -399,9 +399,11 @@ function UpdateDoc() {
     }
 
     // Add the plot image to the docDefinition object
-    if (showPlotImage) {
+    if (showPlotImage.value1) {
         docDefinition.images.plot1 = plotImage.link1;
-        // docDefinition.images.plot2 = plotImage.link2;
+    }
+    if (showPlotImage.value2) {
+        docDefinition.images.plot2 = plotImage.link2;
     }
 }
 
@@ -638,8 +640,8 @@ function PlotImageUpload() {
                 var reader = new FileReader();
 
                 reader.onload = function (e) {
-                    plotImage[i] = reader.result;
-                    HandleImage(plot.files[0], i);
+                    plotImage['link' + (i + 1)] = reader.result;
+                    HandleImage(plot.files[0], (i + 1));
                 }
                 reader.readAsDataURL(e.target.files[0]);
             }
@@ -685,13 +687,13 @@ function PlotImageUpload() {
         DeleteElements('#plotImage' + index);
         if (file.type === 'image' || file.type === 'image/jpeg' || file.type === 'image/png') {
             // let thumbnail = createImg(file.data, '');
-            let thumbnail = createImg(plotImage[index], '').id('plotImage');
+            let thumbnail = createImg(plotImage['link' + index], '').id('plotImage' + index);
             thumbnail.parent(l);
             thumbnail.style('width', '200px');
             thumbnail.style('display', 'inline');
             thumbnail.style('margin-top', '20px');
             thumbnail.style('margin-right: 20px');
-            console.log(index);
+
 
             // const preview = document.querySelector("img");
             // const f = document.querySelector("input[type=file]").files[0];
@@ -711,17 +713,14 @@ function PlotImageUpload() {
             //     plotImage = reader.readAsDataURL(f);
             // }
 
-
-
-
             e.html('');
             // select('#submitButton').style('visibility: visible');
-            showPlotImage = true;
+            showPlotImage['value' + index] = true;
         } else {
-            pic = null;
+            // pic = null;
             e.html('Please upload a valid .jpeg or .png file');
             // select('#submitButton').style('visibility: hidden');
-            showPlotImage = false;
+            showPlotImage['value' + index] = false;
         }
     }
 }
