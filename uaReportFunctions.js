@@ -351,7 +351,7 @@ function PlotDisplay(image1, image2) {
 }
 
 function PartnerLogo(image) {
-    let img = { image: image, width: 90, margin: [0, gap / 2, 0, gap], alignment: 'left' }
+    let img = { image: image, width: 100, margin: [0, gap / 2, 0, gap], alignment: 'left' }
     return img;
 }
 

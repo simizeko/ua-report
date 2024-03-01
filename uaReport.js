@@ -70,8 +70,9 @@ function UpdateDoc() {
         pageMargins: docMargins,
         images: {
             img1: 'https://cdn.jsdelivr.net/gh/simizeko/report-assets@main/images/photo-1471289660181-7feae98d61ae.jpeg',
-            logo: 'https://cdn.jsdelivr.net/gh/simizeko/ua-report@main/placeholder/biofarmLogo.png',
-            signature: 'https://cdn.jsdelivr.net/gh/simizeko/ua-report@main/placeholder/signature.png'
+            logo: 'https://cdn.jsdelivr.net/gh/simizeko/report-assets@main/images/UpAcreStackedRGB.png',
+            signature: 'https://cdn.jsdelivr.net/gh/simizeko/ua-report@main/placeholder/signature.png',
+            projectPartnerLogo: 'https://cdn.jsdelivr.net/gh/simizeko/ua-report@main/placeholder/biofarmLogo.png'
         },
         header: {
             // image: 'img1',
@@ -106,7 +107,7 @@ function UpdateDoc() {
                 image: 'logo',
                 width: 140,
                 alignment: 'center',
-                margin: [0, vh / 4, 0, 60]
+                margin: [0, vh / 5, 0, 60]
             },
             {
                 text: client.lpa,
@@ -224,7 +225,7 @@ function UpdateDoc() {
             {
                 margin: [0, 0, 0, gap / 2],
                 columns: [
-                    PartnerLogo('logo'),
+                    PartnerLogo('projectPartnerLogo'),
                     [h3(client.projectPartner), Body(client.aboutPartner), Body(client.partnerInfo),]
                 ]
             },
