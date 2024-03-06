@@ -83,6 +83,12 @@ function h4body(h4text, bodytext) {
     return [t, b];
 }
 
+function Spacer() {
+    let space = gap / 4
+    let s = { text: "", style: 'body', margin: [0, space, 0, space] };
+    return s;
+}
+
 
 function TableFill(column1, column2) {
     let t = [{ fillColor: '#b3b3b3', bold: true, text: column1 }, { fillColor: '#e6e6e6', text: column2 }]
@@ -315,18 +321,29 @@ function Arrow(color) {
     return c;
 }
 
-function HeaderImage(imagery) {
-    if (showPlotImage === false) {
-        return;
-    } else {
-        let pic = {
-            image: imagery,
-            absolutePosition: { x: 0, y: 0 },
-            // width: 10,
-            cover: { width: vw, height: padding, valign: "center", align: "center" }
-        };
-        return pic;
+function HeaderImagePlot(imagery) {
+
+    let customImage = 'defaultHeader';
+    if (showPlotImage.value1) {
+        customImage = imagery
     }
+
+    let pic = {
+        image: customImage,
+        absolutePosition: { x: 0, y: 0 },
+        cover: { width: vw, height: headerDepth, valign: "center", align: "center" }
+    };
+    return pic;
+}
+
+function HeaderImage() {
+    let pic = {
+        image: 'defaultHeader',
+        absolutePosition: { x: 0, y: 0 },
+        // width: 10,
+        cover: { width: vw, height: headerDepth, valign: "center", align: "center" }
+    };
+    return pic;
 }
 
 function PlotDisplay(image1, image2) {
@@ -345,9 +362,9 @@ function PlotDisplay(image1, image2) {
                 // { text: 'upacre.co.uk', alignment: 'left', width: '*' },
                 // { text: currentPage + ' of ' + pageCount, alignment: 'right', width: '*' }
             ]
+        }
+        return imgs;
     }
-    return imgs;
-}
 }
 
 function PartnerLogo(image) {
@@ -402,10 +419,10 @@ function PageBreak() {
 }
 
 function TermsAndConditions() {
-    let space = 10;
+    let space = 8;
     let tc = {
         style: 'body',
-        lineHeight: 1.25,
+        lineHeight: 1.15,
         margin: [0, 0, 130, gap / 2.5],
         ol: [
             h4('Introduction'),
@@ -559,3 +576,8 @@ function CreateDocument() {
     UpdateDoc();
     pdfMake.createPdf(docDefinition).open();
 }
+
+// function AutoGenerate() {
+//     UpdateDoc();
+//     pdfMake.createPdf(docDefinition).open();
+// }

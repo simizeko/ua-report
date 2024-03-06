@@ -2,13 +2,13 @@
 let vw = 595.28;
 let vh = 841.89;
 let docMargins = 40;
-let padding = vh / 6;
-let docDefinition;
+let headerDepth = vh / 10;
 let fullWidth = vw - (docMargins * 2);
 let gap = 30;
 let colGap = 40;
 
 // Import variables
+let docDefinition;
 let clientSelect = 0;
 let dropdown;
 let clientList = [];
@@ -69,13 +69,13 @@ function UpdateDoc() {
         },
         pageMargins: docMargins,
         images: {
-            img1: 'https://cdn.jsdelivr.net/gh/simizeko/report-assets@main/images/photo-1471289660181-7feae98d61ae.jpeg',
+            defaultHeader: 'https://cdn.jsdelivr.net/gh/simizeko/report-assets@main/images/photo-1471289660181-7feae98d61ae.jpeg',
             logo: 'https://cdn.jsdelivr.net/gh/simizeko/report-assets@main/images/UpAcreStackedRGB.png',
             signature: 'https://cdn.jsdelivr.net/gh/simizeko/ua-report@main/placeholder/signature.png',
             projectPartnerLogo: 'https://cdn.jsdelivr.net/gh/simizeko/ua-report@main/placeholder/biofarmLogo.png'
         },
         header: {
-            // image: 'img1',
+            // image: 'defaultHeader',
             // fit: [vw, vh / 6]
             // width: vw,
             // height: padding
@@ -102,7 +102,7 @@ function UpdateDoc() {
         content: [
             /////////////////////////////
             // PAGE 1
-            // HeaderImage('img1'),
+            // HeaderImage(),
             {
                 image: 'logo',
                 width: 140,
@@ -158,7 +158,7 @@ function UpdateDoc() {
 
             /////////////////////////////
             // PAGE 2
-            // HeaderImage('img1'),
+            HeaderImage(),
             Title("Executive Summary"),
             h3("Overview"),
             LineTable([
@@ -195,7 +195,7 @@ function UpdateDoc() {
 
             /////////////////////////////
             // PAGE 3
-            // HeaderImage('plot'),
+            HeaderImage(),
             Title('Project Outline'),
             TwoColumn('Report', 'Desk survey and ecological forecasting.', orange.t50),
             Arrow(orange.t50),
@@ -220,7 +220,7 @@ function UpdateDoc() {
 
             /////////////////////////////
             // PAGE 4
-            // HeaderImage('plot'),
+            HeaderImage(),
             Title('Project Partner'),
             {
                 margin: [0, 0, 0, gap / 2],
@@ -232,15 +232,17 @@ function UpdateDoc() {
             h3('Proposed Project Strategy'),
             {
                 columns: [
-                    { image: 'img1', width: vw / 2.5 },
-                    [h4("Habitats"), Body(client.habitats), Body(client.strategy)]
+                    [{ image: 'defaultHeader', margin: [0, 0, 0, gap / 2.5], cover: { width: vw / 2.5, height: (vw / 2.5) / 1.33, valign: "center", align: "center" } }, h4("{{Neutral Grassland}}", orange.t100), Body("{{Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ultricies hendrerit massa, sed tincidunt nisi tempus eu. Etiam rhoncus tempor enim, nec gravida ligula ultricies ut. Curabitur tincidunt ante non tortor scelerisque, non convallis ex congue. Mauris vestibulum dui risus, eu mollis sapien interdum ac.}}")],
+                    [{ image: 'defaultHeader', margin: [0, 0, 0, gap / 2.5], cover: { width: vw / 2.5, height: (vw / 2.5) / 1.33, valign: "center", align: "center" } }, h4("{{Wild Flowers}}", orange.t100), Body("{{Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ultricies hendrerit massa, sed tincidunt nisi tempus eu. Etiam rhoncus tempor enim, nec gravida ligula ultricies ut. Curabitur tincidunt ante non tortor scelerisque, non convallis ex congue. Mauris vestibulum dui risus, eu mollis sapien interdum ac.}}")]
                 ]
             },
+            Spacer(),
+            Body(client.strategy),
             PageBreak(),
 
             /////////////////////////////
             // PAGE 5
-            // HeaderImage('img1'),
+            HeaderImage(),
             Title("The Site"),
             PlotDisplay('plot1', 'plot2'),
             // PlotDisplay('plot2'),
@@ -277,7 +279,7 @@ function UpdateDoc() {
 
             /////////////////////////////
             // PAGE 6
-            // HeaderImage('img1'),
+            HeaderImagePlot('plot1'),
             Title('Financial Forecast'),
             h3('Revenue'),
             BodySmall("Total sales is the income from sales and is based on the assumptions that a unit will be sold for £20,000 and a management cost of £7,000 per-unit created is achieved."),
@@ -308,7 +310,7 @@ function UpdateDoc() {
 
             /////////////////////////////
             // PAGE 7
-            // HeaderImage('img1'),
+            HeaderImage(),
             Title("Terms & Conditions"),
             TermsAndConditions(),
             BodySmall("By engaging in Up Acre's services, the client agrees to abide by these terms and conditions."),
@@ -316,7 +318,7 @@ function UpdateDoc() {
 
             /////////////////////////////
             // PAGE 8
-            // HeaderImage('img1'),
+            HeaderImage(),
             Title("Biodiversity Net Gain: FAQs"),
             {
                 columns: [
@@ -351,8 +353,8 @@ function UpdateDoc() {
                 bold: true,
                 // color: orange,
                 lineHeight: 1,
-                // margin: [0, padding, 0, gap]
-                margin: [0, 0, 0, gap]
+                margin: [0, (headerDepth - 5), 0, gap]
+                // margin: [0, 0, 0, gap]
             },
             h1: {
                 fontSize: 28,
@@ -373,12 +375,13 @@ function UpdateDoc() {
             },
             h4: {
                 fontSize: 9,
+                lineHeight: 1,
                 bold: true,
-                margin: [0, 0, 0, 0.5]
+                margin: [0, 0, 0, 2]
             },
             body: {
                 fontSize: 9,
-                lineHeight: 1.5,
+                lineHeight: 1.25,
                 margin: [0, 0, 0, (gap / 3)]
             },
             bodySmall: {
