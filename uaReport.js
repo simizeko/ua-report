@@ -6,9 +6,10 @@ let headerDepth = vh / 10;
 let fullWidth = vw - (docMargins * 2);
 let gap = 30;
 let colGap = 40;
+let columnWidth = (fullWidth - colGap) / 2;
 
 // Import variables
-let docDefinition;
+let docDefinition = {};
 let clientSelect = 0;
 let dropdown;
 let clientList = [];
@@ -16,8 +17,10 @@ let worksheets = {};
 let client = {}
 let sheets;
 let selection;
-let plotImage = { link1: null, link2: null };
-let showPlotImage = { value1: false, value2: false };
+// let images = { plot1: null, plot2: null, habitat1: null, habitat2: null };
+let uploadedImages = {};
+// let showImage = { plot0: false, plot1: false, habitat0: false, habitat1: false };
+let showImage = {};
 
 // Colours
 let lightGray = '#f2f2f2';
@@ -35,6 +38,7 @@ let orange = {
 let page;
 let container;
 let infoContainer;
+let baseMargin = '40px'
 
 //// Input variables
 // let container;
@@ -230,10 +234,11 @@ function UpdateDoc() {
                 ]
             },
             h3('Proposed Project Strategy'),
+            DisplayImage('habitat0', 'habitat1'),
             {
                 columns: [
-                    [{ image: 'defaultHeader', margin: [0, 0, 0, gap / 2.5], cover: { width: vw / 2.5, height: (vw / 2.5) / 1.33, valign: "center", align: "center" } }, h4("{{Neutral Grassland}}", orange.t100), Body("{{Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ultricies hendrerit massa, sed tincidunt nisi tempus eu. Etiam rhoncus tempor enim, nec gravida ligula ultricies ut. Curabitur tincidunt ante non tortor scelerisque, non convallis ex congue. Mauris vestibulum dui risus, eu mollis sapien interdum ac.}}")],
-                    [{ image: 'defaultHeader', margin: [0, 0, 0, gap / 2.5], cover: { width: vw / 2.5, height: (vw / 2.5) / 1.33, valign: "center", align: "center" } }, h4("{{Wild Flowers}}", orange.t100), Body("{{Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ultricies hendrerit massa, sed tincidunt nisi tempus eu. Etiam rhoncus tempor enim, nec gravida ligula ultricies ut. Curabitur tincidunt ante non tortor scelerisque, non convallis ex congue. Mauris vestibulum dui risus, eu mollis sapien interdum ac.}}")]
+                    [h4("{{Neutral Grassland}}", orange.t100), Body("{{Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ultricies hendrerit massa, sed tincidunt nisi tempus eu. Etiam rhoncus tempor enim, nec gravida ligula ultricies ut. Curabitur tincidunt ante non tortor scelerisque, non convallis ex congue. Mauris vestibulum dui risus, eu mollis sapien interdum ac.}}")],
+                    [h4("{{Wild Flowers}}", orange.t100), Body("{{Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ultricies hendrerit massa, sed tincidunt nisi tempus eu. Etiam rhoncus tempor enim, nec gravida ligula ultricies ut. Curabitur tincidunt ante non tortor scelerisque, non convallis ex congue. Mauris vestibulum dui risus, eu mollis sapien interdum ac.}}")]
                 ]
             },
             Spacer(),
@@ -244,8 +249,7 @@ function UpdateDoc() {
             // PAGE 5
             HeaderImage(),
             Title("The Site"),
-            PlotDisplay('plot1', 'plot2'),
-            // PlotDisplay('plot2'),
+            DisplayImage('plot0', 'plot1'),
             {
                 columns: [[
                     h3('Overview of Site'),
@@ -279,7 +283,7 @@ function UpdateDoc() {
 
             /////////////////////////////
             // PAGE 6
-            HeaderImagePlot('plot1'),
+            HeaderImagePlot(),
             Title('Financial Forecast'),
             h3('Revenue'),
             BodySmall("Total sales is the income from sales and is based on the assumptions that a unit will be sold for £20,000 and a management cost of £7,000 per-unit created is achieved."),
@@ -402,13 +406,14 @@ function UpdateDoc() {
         }
     }
 
-    // Add the plot image to the docDefinition object
-    if (showPlotImage.value1) {
-        docDefinition.images.plot1 = plotImage.link1;
-    }
-    if (showPlotImage.value2) {
-        docDefinition.images.plot2 = plotImage.link2;
-    }
+    // //// Add the plot image to the docDefinition object
+    // if (showImage.plot0) {
+    //     docDefinition.images.plot0 = images.plot0;
+    // }
+    // if (showImage.plot1) {
+    //     docDefinition.images.plot1 = images.plot1;
+    // }
+
 }
 
 
@@ -428,8 +433,8 @@ function setup() {
     // container.style('min-width', '50%');
     // container.style('width: 50%')
     container.parent(page);
-    container.style('padding: 40px');
-    container.style('padding-top: 20px');
+    container.style('padding', baseMargin);
+    // container.style('padding-top: 20px');
     container.style('background-color: #f2f2f2');
     container.style('float: left');
     // container.style('position: relative');
@@ -437,7 +442,7 @@ function setup() {
 
     infoContainer = createDiv('');
     infoContainer.parent(page);
-    infoContainer.style('padding: 40px');
+    infoContainer.style('padding', baseMargin);
     infoContainer.style('padding-top: 0px');
     // infoContainer.style('background-color: #cdcdcd');
     // infoContainer.style('width: 50%');
@@ -466,7 +471,8 @@ function pageTitle(text) {
     let t = createElement('h1', text);
     t.parent(container);
     t.style('font-family', 'sans-serif');
-    t.style('margin-bottom', '40px');
+    t.style('margin-top', '0px');
+    t.style('margin-bottom', baseMargin);
     // t.style('width', '100%');
 }
 
@@ -613,7 +619,8 @@ function UpdateClient() {
         }
     }
 
-    PlotImageUpload();
+    ImageUpload('plot', '#d9d9d9');
+    ImageUpload('habitat', '#c7c7c7');
     SubmitButton('Create Report PDF');
     ClientDisplay();
     // UpdateData();
@@ -621,12 +628,34 @@ function UpdateClient() {
 }
 
 
-function PlotImageUpload() {
+function ImageUpload(category, color) {
 
-    DeleteElements('#plotImage0', '#plotImage1', '#plotText', '#plotFile0', '#plotFile1', '#error');
+    function CategoryId(text) {
+        let string = '#' + category + text;
+        return string;
+    }
 
-    let l = createP('Upload plot images (optional)').parent(container).style('margin-top: 40px').id('plotText');
-    let e = createP('').parent(l).style('color: red').id('error');
+    function InsertCategory(text) {
+        let c = category + text;
+        return c;
+    }
+
+    DeleteElements(CategoryId('Image0'), CategoryId('Image1'), CategoryId('Text'), CategoryId('File0'), CategoryId('File1'), CategoryId('Error'));
+
+    let imageUploadContainer = createDiv('').parent(container).id(category + 'UploadContainer');
+    imageUploadContainer.style('background-color', color);
+    imageUploadContainer.style('width', '100%');
+    imageUploadContainer.style('margin-left', '-' + baseMargin);
+    imageUploadContainer.style('margin-right', '-' + baseMargin);
+    imageUploadContainer.style('padding', baseMargin);
+    // imageUploadContainer.style('padding-top', '20px');
+    // imageUploadContainer.style('padding-bottom', '20px');
+
+    let containerId = select(CategoryId('UploadContainer'));
+    // imageUploadContainer.style('float', 'left');
+
+    let l = createP('Upload ' + category + ' images (optional)').style('margin-top', '0px').parent(containerId).id(InsertCategory('Text'));
+    let e = createP('').parent(l).style('color: red').id(InsertCategory('Error'));
 
     // let imgUpload = createFileInput(HandleImage).id('plotImage');
     // imgUpload.parent(container);
@@ -634,68 +663,33 @@ function PlotImageUpload() {
     for (let i = 0; i < 2; i++) {
         let imgUpload = document.createElement('INPUT');
         imgUpload.setAttribute("type", "file");
-        imgUpload.setAttribute('id', 'plotFile' + i);
-        document.getElementById('container').appendChild(imgUpload);
+        imgUpload.setAttribute('id', InsertCategory('File') + i);
+        document.getElementById(category + 'UploadContainer').appendChild(imgUpload);
 
-        let plot = document.getElementById('plotFile' + i);
-        plot.addEventListener("change", function (e) {
-            if (!!plot.files && plot.files.length > 0) {
+        let uploaded = document.getElementById(InsertCategory('File') + i);
+        uploaded.addEventListener("change", function (e) {
+            if (!!uploaded.files && uploaded.files.length > 0) {
 
                 var reader = new FileReader();
 
                 reader.onload = function (e) {
-                    plotImage['link' + (i + 1)] = reader.result;
-                    HandleImage(plot.files[0], (i + 1));
+                    uploadedImages[category + i] = reader.result;
+                    HandleImage(uploaded.files[0], (i));
                 }
                 reader.readAsDataURL(e.target.files[0]);
             }
         });
     }
 
-    // // const f = document.querySelector("input[type=file]").files[0];
-    // const f = document.querySelectorAll("input[type=file]");
-    // // const f = document.getElementById('plotFile')
-
-    // // console.log(f[1].files[0]);
-    // const reader = new FileReader();
-
-    // reader.addEventListener(
-    //     "load",
-    //     () => {
-    //         // convert image file to base64 string
-    //         // preview.src = reader.result;
-
-    //         plotImage.src = reader.result;
-    //         // console.log(reader.result);
-    //     },
-    //     false,
-    // );
-
-    // if (f[1].files[0]) {
-    //     reader.readAsDataURL(f[1].files[0]);
-    //     console.log(plotImage);
-
-    //     // let thumbnail = document.createElement('img');
-    //     // thumbnail.src = 'my_image.jpg';
-    //     // document.getElementById('container').appendChild(thumbnail);
-    // }
-
-
-    // plot.addEventListener("change", function (e) {
-    //     if (!!plot.files && plot.files.length > 0) {
-    //     }
-    // });
-
-
     function HandleImage(file, index) {
-        DeleteElements('#plotImage' + index);
+        DeleteElements(CategoryId('Image') + index);
         if (file.type === 'image' || file.type === 'image/jpeg' || file.type === 'image/png') {
             // let thumbnail = createImg(file.data, '');
-            let thumbnail = createImg(plotImage['link' + index], '').id('plotImage' + index);
+            let thumbnail = createImg(uploadedImages[category + index], '').id(InsertCategory('Image') + index);
             thumbnail.parent(l);
             thumbnail.style('width', '200px');
             thumbnail.style('display', 'inline');
-            thumbnail.style('margin-top', '20px');
+            // thumbnail.style('margin-top', '20px');
             thumbnail.style('margin-right: 20px');
 
 
@@ -719,12 +713,18 @@ function PlotImageUpload() {
 
             e.html('');
             // select('#submitButton').style('visibility: visible');
-            showPlotImage['value' + index] = true;
+            // showPlotImage['value' + index] = true;
+            // showImage[category + index] = true;
+
+            //// Add the image to the docDefinition object
+            // docDefinition.images = {}; // Need to initialise the property, cannot set undefined
+            // docDefinition.images[category + index] = images[category + index];
         } else {
             // pic = null;
             e.html('Please upload a valid .jpeg or .png file');
             // select('#submitButton').style('visibility: hidden');
-            showPlotImage['value' + index] = false;
+            // showPlotImage['value' + index] = false;
+            // showImage[category + index] = false;
         }
     }
 }
@@ -732,13 +732,25 @@ function PlotImageUpload() {
 
 function SubmitButton(text) {
 
-    DeleteElements('#submitButton');
+    DeleteElements('#buttonContainer');
+
+    let buttonContainer = createDiv('').id('buttonContainer');
+    buttonContainer.parent(container);
+    buttonContainer.style('background-color', '#000000');
+    buttonContainer.style('margin', '-' + baseMargin)
+    buttonContainer.style('margin-top', '0px');
+    buttonContainer.style('padding', baseMargin);
+    // buttonContainer.style('float', 'left');
+    // buttonContainer.style('display', 'block');
 
     let submit = createButton(text).id('submitButton');
-    submit.parent(container);
+    submit.parent(buttonContainer);
     submit.style('padding', '10px');
-    submit.style('margin-top', '30px');
+    // submit.style('margin-top', '60px');
     submit.style('display', 'block');
+    submit.style('width', '100%');
+    // submit.style('position', 'relative');
+    // submit.style('float', 'left');
     submit.mouseReleased(CreateDocument);
 }
 
@@ -757,12 +769,20 @@ function ClientDisplay() {
 
 
 function Styles() {
-    let b = selectAll('p')
+    let b = selectAll('p');
     for (let i = 0; i < b.length; i++) {
         b[i].style('font-family', 'sans-serif');
         b[i].style('max-width: 40vw');
+        // b[i].style('margin-left', baseMargin);
+        // b[i].style('margin-right', baseMargin);
         // b[i].style('background-color: red');
     }
+
+    // let v = selectAll('#file');
+    // for (let i = 0; i < v.length; i++) {
+    //     v[i].style('margin-left', baseMargin);
+    //     v[i].style('margin-right', baseMargin);
+    // }
 }
 
 // function Input(text, id) {

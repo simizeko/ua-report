@@ -321,11 +321,11 @@ function Arrow(color) {
     return c;
 }
 
-function HeaderImagePlot(imagery) {
+function HeaderImagePlot() {
 
     let customImage = 'defaultHeader';
-    if (showPlotImage.value1) {
-        customImage = imagery
+    if (uploadedImages.plot0) {
+        customImage = uploadedImages.plot0
     }
 
     let pic = {
@@ -346,21 +346,20 @@ function HeaderImage() {
     return pic;
 }
 
-function PlotDisplay(image1, image2) {
-    if (showPlotImage.value1 && !showPlotImage.value2) {
-        let img = { image: image1, width: fullWidth / 1.5, margin: [0, 0, 0, gap] };
+function DisplayImage(image1, image2) {
+    let marginBottom = gap / 2.5
+    if (uploadedImages[image1] && !uploadedImages[image2]) {
+        let img = { image: uploadedImages[image1], width: fullWidth / 1.5, margin: [0, 0, 0, marginBottom] };
         return img;
     }
 
-    if (showPlotImage.value1 && showPlotImage.value2) {
+    if (uploadedImages[image1] && uploadedImages[image2]) {
         let imgs = {
-            margin: [0, 0, 0, gap],
-            columnGap: 10,
+            margin: [0, 0, 0, marginBottom],
+            // columnGap: 10,
             columns: [
-                { image: image1, width: fullWidth / 2 },
-                { image: image2, width: fullWidth / 2 }
-                // { text: 'upacre.co.uk', alignment: 'left', width: '*' },
-                // { text: currentPage + ' of ' + pageCount, alignment: 'right', width: '*' }
+                { image: uploadedImages[image1], width: columnWidth },
+                { image: uploadedImages[image2], width: columnWidth }
             ]
         }
         return imgs;
