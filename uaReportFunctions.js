@@ -41,6 +41,15 @@ function Body(bodytext) {
     let b = {
         text: bodytext,
         style: 'body',
+        margin: [0, 0, bodyWidth, (gap / 3)]
+    };
+    return b;
+}
+
+function BodyColumn(bodytext) {
+    let b = {
+        text: bodytext,
+        style: 'body'
     };
     return b;
 }
@@ -83,9 +92,12 @@ function h4body(h4text, bodytext) {
     return [t, b];
 }
 
-function Spacer() {
-    let space = gap / 4
-    let s = { text: "", style: 'body', margin: [0, space, 0, space] };
+function Spacer(size) {
+    let space = { small: gap / 6, medium: gap / 4, large: gap / 1.5 }
+    if (!size) {
+        size = 'medium'
+    }
+    let s = { text: "", style: 'body', margin: [0, space[size], 0, space[size]] };
     return s;
 }
 
@@ -142,10 +154,10 @@ function LineTable(values, total) {
                 return 0;
             },
             paddingRight: function paddingRight(i, node) {
-                //   return i === node.table.widths.length - 1 ? 0 : 20;
+                return i === node.table.widths.length - 1 ? 0 : 10;
                 // return 30;
                 // return 20;
-                return 15;
+                // return 15;
             },
             paddingTop: function paddingTop(i, node) {
                 //   return i === node.table.widths.length - 1 ? 0 : 8;
@@ -367,7 +379,7 @@ function DisplayImage(image1, image2) {
 }
 
 function PartnerLogo(image) {
-    let img = { image: image, width: 100, margin: [0, gap / 2, 0, gap], alignment: 'left' }
+    let img = { image: image, width: 110, margin: [0, gap / 2, 0, gap], alignment: 'left' }
     return img;
 }
 
@@ -427,7 +439,7 @@ function TermsAndConditions() {
             h4('Introduction'),
             {
                 margin: [0, 0, 0, space],
-                separator: ['1.', ''],
+                separator: ['1.', ' '],
                 ol: [
                     "Up Acre Ltd. ('Up Acre') specialises in alternative land diversification for farmers and landowners."
                 ]
@@ -435,7 +447,7 @@ function TermsAndConditions() {
             h4('Reports and Advice'),
             {
                 margin: [0, 0, 0, space],
-                separator: ['2.', ''],
+                separator: ['2.', ' '],
                 ol: [
                     "Up Acre provides reports based on predictions and estimations. These reports are generic advice and should not be considered as absolute guarantees.",
                     "Clients are advised to conduct their own research and seek professional advice before making any decisions based on the reports provided by Up Acre."
@@ -444,7 +456,7 @@ function TermsAndConditions() {
             h4('Remuneration'),
             {
                 margin: [0, 0, 0, space],
-                separator: ['3.', ''],
+                separator: ['3.', ' '],
                 ol: [
                     "Up Acre is typically remunerated by the Project Partner at a rate of 2% of the net profit on a finders fee.",
                     "The compensation amount and terms may vary based on the specific agreement between Up Acre and the Project Partner."
@@ -453,7 +465,7 @@ function TermsAndConditions() {
             h4('Confidentiality'),
             {
                 margin: [0, 0, 0, space],
-                separator: ['4.', ''],
+                separator: ['4.', ' '],
                 ol: [
                     "Up Acre acknowledges that the information provided by clients may be sensitive and confidential.",
                     "Up Acre agrees to take all reasonable measures to maintain the confidentiality of client information and not to disclose it to third parties without the client's explicit consent."
@@ -462,7 +474,7 @@ function TermsAndConditions() {
             h4('Limitation of Liability'),
             {
                 margin: [0, 0, 0, space],
-                separator: ['5.', ''],
+                separator: ['5.', ' '],
                 ol: [
                     "Up Acre shall not be liable for any direct, indirect, incidental, consequential, or exemplary damages arising from the use of its services.",
                     "Up Acre's liability is limited to the fees paid by the client for the specific services rendered."
@@ -471,7 +483,7 @@ function TermsAndConditions() {
             h4('Client Responsibilities'),
             {
                 margin: [0, 0, 0, space],
-                separator: ['6.', ''],
+                separator: ['6.', ' '],
                 ol: [
                     "Clients are responsible for verifying the accuracy and completeness of the information provided by Up Acre.",
                     "Clients are responsible for compliance with any applicable laws and regulations related to the use of Up Acre's services."
@@ -480,7 +492,7 @@ function TermsAndConditions() {
             h4('Termination of Services'),
             {
                 margin: [0, 0, 0, space],
-                separator: ['7.', ''],
+                separator: ['7.', ' '],
                 ol: [
                     "Either party may terminate the services provided by Up Acre at any given time."
                 ]
@@ -488,7 +500,7 @@ function TermsAndConditions() {
             h4('Governing Law'),
             {
                 margin: [0, 0, 0, space],
-                separator: ['8.', ''],
+                separator: ['8.', ' '],
                 ol: [
                     "These terms and conditions are governed by the laws of England and any disputes shall be resolved in the appropriate courts of England."
                 ]
@@ -496,7 +508,7 @@ function TermsAndConditions() {
             h4('Amendment of Terms'),
             {
                 margin: [0, 0, 0, space],
-                separator: ['9.', ''],
+                separator: ['9.', ' '],
                 ol: [
                     "Up Acre reserves the right to amend these terms and conditions at any time.",
                     "Clients will be notified of any changes to the terms and conditions, and continued use of Up Acre's services implies acceptance of the updated terms."
@@ -505,7 +517,7 @@ function TermsAndConditions() {
             h4('Miscellaneous'),
             {
                 margin: [0, 0, 0, space],
-                separator: ['10.', ''],
+                separator: ['10.', ' '],
                 ol: [
                     "These terms and conditions constitute the entire agreement between Up Acre and the client.",
                     "No waiver or modification of these terms shall be valid unless in writing and signed by both parties."
@@ -515,40 +527,6 @@ function TermsAndConditions() {
     }
     return tc;
 }
-
-// function UpdateValues() {
-//     LPA.a = Answer(LPA.id);
-//     postcode.a = Answer(postcode.id)
-//     accountManager.a = Answer(accountManager.id);
-//     projectPartner.a = Answer(projectPartner.id);
-//     landOwner.a = Answer(landOwner.id);
-//     acreage.a = Answer(acreage.id);
-//     acquisitionOfLand.a = Answer(acquisitionOfLand.id);
-//     yearOfAcquisition.a = Answer(yearOfAcquisition.id);
-//     currentLandUse.a = Answer(currentLandUse.id);
-//     reasonForDiversification.a = Answer(reasonForDiversification.id);
-//     proposedProject.a = Answer(proposedProject.id);
-//     income.a = Answer(income.id);
-//     expenditure.a = Answer(expenditure.id);
-//     landOwnerIncome.a = Answer(landOwnerIncome.id);
-
-//     function Answer(id) {
-//         let answer = select('#' + id);
-//         return answer.value();
-//     }
-
-
-//     //     // reset array
-//     //     // answers = [];
-
-//     //     // select all values from the inputs and add to array
-//     //     // let a = selectAll('.answers')
-//     //     // for (let i = 0; i < a.length; i++) {
-//     //     //     answers.push(a[i].value())
-//     //     // }
-//     //     // LPA = Input(LPAinput)
-//     //     // console.log(LPA);
-// }
 
 function DeleteElements(...selector) {
 
@@ -570,10 +548,29 @@ function DeleteElements(...selector) {
     // }
 }
 
+/// MOVE ERROR CHECK SO IT CAN BE PASSED A CATEGORY IN THE IMAGEUPLOAD FUNCTION
+function ErrorCheck() {
+    // console.log(uploadedImages['partner-logo0']);
+    if (!uploadedImages['partner-logo0']) {
+        let e = select('#partner-logoError');
+        e.html('Please upload a project partner logo');
+        console.log('ERROR');
+        errors.push('partner-logoImage');
+    } else{
+        let indexNumber = errors.indexOf('partner-logoImage');
+        errors.splice(indexNumber, 1);
+    }
+}
+
 function CreateDocument() {
-    // UpdateValues();
     UpdateDoc();
-    pdfMake.createPdf(docDefinition).open();
+    // ErrorCheck();
+    console.log(errors);
+    //// What is the best way of checking for errors here?
+    //// Create an array where errors are sent which is checked?
+    if (errors.length < 1) {
+        pdfMake.createPdf(docDefinition).open();
+    }
 }
 
 // function AutoGenerate() {

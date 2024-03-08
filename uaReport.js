@@ -7,6 +7,7 @@ let fullWidth = vw - (docMargins * 2);
 let gap = 30;
 let colGap = 40;
 let columnWidth = (fullWidth - colGap) / 2;
+let bodyWidth = vw / 4.5;
 
 // Import variables
 let docDefinition = {};
@@ -21,6 +22,7 @@ let selection;
 let uploadedImages = {};
 // let showImage = { plot0: false, plot1: false, habitat0: false, habitat1: false };
 let showImage = {};
+let errors = [];
 
 // Colours
 let lightGray = '#f2f2f2';
@@ -35,7 +37,7 @@ let orange = {
     t50: '#fdad71'
 }
 //// HTML variables
-let page;
+let flexbox;
 let container;
 let infoContainer;
 let baseMargin = '40px'
@@ -88,30 +90,28 @@ function UpdateDoc() {
         footer: function (currentPage, pageCount, pageSize) {
             // you can apply any logic and return any valid pdfmake element
 
-            return {
-                // absolutePosition: { x: 0, y: vh / 2 },
-                width: vw,
-                style: 'folio',
-                columns: [
-                    { text: 'upacre.co.uk', alignment: 'left', width: '*' },
-                    { image: 'logoBlack', width: 50, alignment: 'center' },
-                    { text: currentPage + ' of ' + pageCount, alignment: 'right', width: '*' }
-                ]
+            if (currentPage === 1 || currentPage === pageCount) {
+                return;
+            } else {
+                return {
+                    // absolutePosition: { x: 0, y: vh / 2 },
+                    width: vw,
+                    style: 'folio',
+                    columns: [
+                        { text: 'upacre.co.uk', alignment: 'left', width: '*', margin: [0, 15, 0, 0] },
+                        { image: 'logoBlack', width: 36, alignment: 'center', opacity: 0.35 },
+                        { text: currentPage + ' of ' + pageCount, alignment: 'right', width: '*', margin: [0, 15, 0, 0] }
+                    ]
+                }
             }
         },
-        // footer: {
-        //     columns: [
-        //         function (currentPage, pageCount) { return currentPage.toString() + ' of ' + pageCount; },
-        //         { text: 'upacre.co.uk', alignment: 'right', style: 'body' }
-        //     ]
-        // },
         content: [
             /////////////////////////////
             // PAGE 1
             // HeaderImage(),
             {
                 image: 'logo',
-                width: 140,
+                width: 120,
                 alignment: 'center',
                 margin: [0, vh / 5, 0, 60]
             },
@@ -150,14 +150,14 @@ function UpdateDoc() {
                 style: 'body',
                 alignment: 'center',
                 bold: true,
-                absolutePosition: { x: docMargins, y: (vh - 60) - 15 },
+                absolutePosition: { x: docMargins, y: (vh - 55) - 15 },
                 margin: [0, 0, 0, 0]
             },
             {
                 text: 'Up Acre Limited, Studio 2, 92 Lots Road, Chelsea, London, SW10 0QD',
                 style: 'body',
                 alignment: 'center',
-                absolutePosition: { x: docMargins, y: (vh - 60) },
+                absolutePosition: { x: docMargins, y: (vh - 55) },
                 margin: [0, 0, 0, 0],
                 pageBreak: 'after'
             },
@@ -188,7 +188,8 @@ function UpdateDoc() {
                 + client.projectPartner
                 + ", has analysed and evaluated your land's potential within "
                 + client.proposedProject
-                + ". The report is a guide for potential diversification, and all figures/strategies should be taken as estimations. Below is my brief summary on the project."),
+                + ". The report is a guide for potential diversification, and all figures/strategies should be taken as estimations. Below is my brief summary on the project."
+            ),
 
             Body(client.executiveSummary),
             h3("Financial Summary"),
@@ -231,7 +232,7 @@ function UpdateDoc() {
             {
                 margin: [0, 0, 0, gap / 2],
                 columns: [
-                    PartnerLogo('projectPartnerLogo'),
+                    PartnerLogo(uploadedImages['partner-logo0']),
                     [h3(client.projectPartner), Body(client.aboutPartner), Body(client.partnerInfo),]
                 ]
             },
@@ -239,8 +240,10 @@ function UpdateDoc() {
             DisplayImage('habitat0', 'habitat1'),
             {
                 columns: [
-                    [h4("{{Neutral Grassland}}", orange.t100), Body("{{Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ultricies hendrerit massa, sed tincidunt nisi tempus eu. Etiam rhoncus tempor enim, nec gravida ligula ultricies ut. Curabitur tincidunt ante non tortor scelerisque, non convallis ex congue. Mauris vestibulum dui risus, eu mollis sapien interdum ac.}}")],
-                    [h4("{{Wild Flowers}}", orange.t100), Body("{{Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ultricies hendrerit massa, sed tincidunt nisi tempus eu. Etiam rhoncus tempor enim, nec gravida ligula ultricies ut. Curabitur tincidunt ante non tortor scelerisque, non convallis ex congue. Mauris vestibulum dui risus, eu mollis sapien interdum ac.}}")]
+                    // [h4("{{Neutral Grassland}}", orange.t100), BodyColumn("{{Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ultricies hendrerit massa, sed tincidunt nisi tempus eu. Etiam rhoncus tempor enim, nec gravida ligula ultricies ut. Curabitur tincidunt ante non tortor scelerisque, non convallis ex congue. Mauris vestibulum dui risus, eu mollis sapien interdum ac.}}")],
+                    // [h4("{{Wild Flowers}}", orange.t100), BodyColumn("{{Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ultricies hendrerit massa, sed tincidunt nisi tempus eu. Etiam rhoncus tempor enim, nec gravida ligula ultricies ut. Curabitur tincidunt ante non tortor scelerisque, non convallis ex congue. Mauris vestibulum dui risus, eu mollis sapien interdum ac.}}")]
+                    h4body("{{Neutral Grassland}}", "{{Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ultricies hendrerit massa, sed tincidunt nisi tempus eu. Etiam rhoncus tempor enim, nec gravida ligula ultricies ut. Curabitur tincidunt ante non tortor scelerisque, non convallis ex congue. Mauris vestibulum dui risus, eu mollis sapien interdum ac.}}"),
+                    h4body("{{Wild Flowers}}", "{{Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ultricies hendrerit massa, sed tincidunt nisi tempus eu. Etiam rhoncus tempor enim, nec gravida ligula ultricies ut. Curabitur tincidunt ante non tortor scelerisque, non convallis ex congue. Mauris vestibulum dui risus, eu mollis sapien interdum ac.}}")
                 ]
             },
             Spacer(),
@@ -281,6 +284,8 @@ function UpdateDoc() {
                     ])]
                 ]
             },
+            Spacer('large'),
+            BodySmall("DISCLAIMER: Lorem ipsum dolor sit amet, consectetur adipiscing elit.Nulla semper tincidunt lacus, vitae convallis eros varius eget.Vivamus volutpat nisl et sem feugiat accumsan.Nunc mattis blandit magna, non laoreet est congue a.Nulla nunc metus, luctus quis ultrices eu, ultricies vel mauris.Vestibulum convallis maximus neque, ornare volutpat enim pellentesque id."),
             PageBreak(),
 
             /////////////////////////////
@@ -349,6 +354,25 @@ function UpdateDoc() {
                         ])
                     ]
                 ]
+            },
+            PageBreak(),
+
+            /////////////////////////////
+            // PAGE 9
+            { image: 'logoBlack', opacity: 0.35, width: 120, absolutePosition: { x: (vw / 2) - 60, y: (vh / 2) - 90 } },
+            {
+                text: "e: info@upacre.co.uk\nt: 020 394 417 067\nm: 07933 430 394",
+                style: 'body',
+                alignment: 'center',
+                absolutePosition: { x: docMargins, y: (vh - 55) - 38 }
+            },
+            {
+                text: 'upacre.co.uk',
+                style: 'body',
+                bold: true,
+                color: orange.t100,
+                alignment: 'center',
+                absolutePosition: { x: docMargins, y: vh - 55 }
             }
         ],
 
@@ -394,7 +418,7 @@ function UpdateDoc() {
                 fontSize: 8,
                 lineHeight: 1.25,
                 color: darkGray,
-                margin: [0, -(gap / 3), (vw / 4), (gap / 3.5)]
+                margin: [0, -(gap / 3), bodyWidth, (gap / 3.5)]
             },
             folio: {
                 fontSize: 8,
@@ -423,32 +447,37 @@ function UpdateDoc() {
 function setup() {
     select('.p5Canvas').remove();
 
-    page = createDiv('');
-    page.position(0, 0);
-    // page.style('width: 100%');
-    // page.style('background-color: #5ad1ad');
-    // page.style('overflow: hidden');
-    // page.style('display: inline-block')
+    flexbox = createDiv('');
+    flexbox.position(0, 0);
+    flexbox.style('display: flex');
+    flexbox.style('flex-direction: row');
+    flexbox.style('flex-wrap: wrap');
+    // flexbox.style('width: 100%');
+    // flexbox.style('background-color: #5ad1ad');
+    // flexbox.style('overflow: hidden');
 
     container = createDiv('').id('container');
     // container.position(0, 0);
     // container.style('min-width', '50%');
     // container.style('width: 50%')
-    container.parent(page);
+    container.parent(flexbox);
     container.style('padding', baseMargin);
     // container.style('padding-top: 20px');
     container.style('background-color: #f2f2f2');
-    container.style('float: left');
+    // container.style('float: left');
+    // container.style('width', '200%');
+    // container.style('min-width', '50%');
     // container.style('position: relative');
     // container.style('display: block');
 
     infoContainer = createDiv('');
-    infoContainer.parent(page);
+    infoContainer.parent(flexbox);
     infoContainer.style('padding', baseMargin);
     infoContainer.style('padding-top: 0px');
     // infoContainer.style('background-color: #cdcdcd');
-    // infoContainer.style('width: 50%');
-    infoContainer.style('display: inline-block');
+    infoContainer.style('max-width: 50%');
+    // infoContainer.style('float', 'left');
+    // infoContainer.style('display: inline-block');
 
 
     pageTitle('Report Prototype');
@@ -621,8 +650,9 @@ function UpdateClient() {
         }
     }
 
-    ImageUpload('plot', '#d9d9d9');
-    ImageUpload('habitat', '#c7c7c7');
+    ImageUpload('partner-logo', 1, '#e6e6e6')
+    ImageUpload('habitat', 2, '#e6e6e6');
+    ImageUpload('plot', 2, '#d9d9d9');
     SubmitButton('Create Report PDF');
     ClientDisplay();
     // UpdateData();
@@ -630,19 +660,15 @@ function UpdateClient() {
 }
 
 
-function ImageUpload(category, color) {
+function ImageUpload(category, numberOfInputs, color) {
 
     function CategoryId(text) {
         let string = '#' + category + text;
         return string;
     }
 
-    function InsertCategory(text) {
-        let c = category + text;
-        return c;
-    }
-
-    DeleteElements(CategoryId('Image0'), CategoryId('Image1'), CategoryId('Text'), CategoryId('File0'), CategoryId('File1'), CategoryId('Error'));
+    // DeleteElements(CategoryId('Image0'), CategoryId('Image1'), CategoryId('Text'), CategoryId('File0'), CategoryId('File1'), CategoryId('Error'));
+    DeleteElements(CategoryId('UploadContainer'));
 
     let imageUploadContainer = createDiv('').parent(container).id(category + 'UploadContainer');
     imageUploadContainer.style('background-color', color);
@@ -652,23 +678,28 @@ function ImageUpload(category, color) {
     imageUploadContainer.style('padding', baseMargin);
     // imageUploadContainer.style('padding-top', '20px');
     // imageUploadContainer.style('padding-bottom', '20px');
+    // imageUploadContainer.style('display', 'inline');
 
     let containerId = select(CategoryId('UploadContainer'));
     // imageUploadContainer.style('float', 'left');
 
-    let l = createP('Upload ' + category + ' images (optional)').style('margin-top', '0px').parent(containerId).id(InsertCategory('Text'));
-    let e = createP('').parent(l).style('color: red').id(InsertCategory('Error'));
+    let label = ' images (optional)';
+    if (numberOfInputs == 1) {
+        label = ' .jpeg or .png'
+    }
+    let l = createP('Upload ' + category + label).style('margin-top', '0px').parent(containerId).id(category + 'Text');
+    let e = createP('').parent(l).style('color: red').id(category + 'Error');
 
     // let imgUpload = createFileInput(HandleImage).id('plotImage');
     // imgUpload.parent(container);
 
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < numberOfInputs; i++) {
         let imgUpload = document.createElement('INPUT');
         imgUpload.setAttribute("type", "file");
-        imgUpload.setAttribute('id', InsertCategory('File') + i);
+        imgUpload.setAttribute('id', category + 'File' + i);
         document.getElementById(category + 'UploadContainer').appendChild(imgUpload);
 
-        let uploaded = document.getElementById(InsertCategory('File') + i);
+        let uploaded = document.getElementById(category + 'File' + i);
         uploaded.addEventListener("change", function (e) {
             if (!!uploaded.files && uploaded.files.length > 0) {
 
@@ -676,7 +707,7 @@ function ImageUpload(category, color) {
 
                 reader.onload = function (e) {
                     uploadedImages[category + i] = reader.result;
-                    HandleImage(uploaded.files[0], (i));
+                    HandleImage(uploaded.files[0], i);
                 }
                 reader.readAsDataURL(e.target.files[0]);
             }
@@ -685,9 +716,9 @@ function ImageUpload(category, color) {
 
     function HandleImage(file, index) {
         DeleteElements(CategoryId('Image') + index);
-        if (file.type === 'image' || file.type === 'image/jpeg' || file.type === 'image/png') {
+        if (file.type === 'image/jpeg' || file.type === 'image/png') {
             // let thumbnail = createImg(file.data, '');
-            let thumbnail = createImg(uploadedImages[category + index], '').id(InsertCategory('Image') + index);
+            let thumbnail = createImg(uploadedImages[category + index], '').id(category + 'Image' + index);
             thumbnail.parent(l);
             thumbnail.style('width', '200px');
             thumbnail.style('display', 'inline');
@@ -721,24 +752,32 @@ function ImageUpload(category, color) {
             //// Add the image to the docDefinition object
             // docDefinition.images = {}; // Need to initialise the property, cannot set undefined
             // docDefinition.images[category + index] = images[category + index];
+
+            let indexNumber = errors.indexOf(category + 'Image');
+            if (indexNumber > -1) { // only splice array when item is found
+                errors.splice(indexNumber, 1); // 2nd parameter means remove one item only
+            }
+            errors.splice
         } else {
             // pic = null;
-            e.html('Please upload a valid .jpeg or .png file');
+            e.html('Please upload a valid ' + category + ' .jpeg or .png file');
             // select('#submitButton').style('visibility: hidden');
             // showPlotImage['value' + index] = false;
             // showImage[category + index] = false;
+            errors.push(category + 'Image');
+            console.log(errors)
         }
     }
 }
 
 
-function SubmitButton(text) {
+function SubmitButton(text, color) {
 
     DeleteElements('#buttonContainer');
 
     let buttonContainer = createDiv('').id('buttonContainer');
     buttonContainer.parent(container);
-    buttonContainer.style('background-color', '#000000');
+    buttonContainer.style('background-color', color);
     buttonContainer.style('margin', '-' + baseMargin)
     buttonContainer.style('margin-top', '0px');
     buttonContainer.style('padding', baseMargin);
@@ -774,7 +813,8 @@ function Styles() {
     let b = selectAll('p');
     for (let i = 0; i < b.length; i++) {
         b[i].style('font-family', 'sans-serif');
-        b[i].style('max-width: 40vw');
+        // b[i].style('max-width: 40vw');
+        // b[i].style('min-width: 40%');
         // b[i].style('margin-left', baseMargin);
         // b[i].style('margin-right', baseMargin);
         // b[i].style('background-color: red');
