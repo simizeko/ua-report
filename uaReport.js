@@ -73,8 +73,9 @@ function UpdateDoc() {
         },
         pageMargins: docMargins,
         images: {
-            defaultHeader: 'https://cdn.jsdelivr.net/gh/simizeko/report-assets@main/images/photo-1471289660181-7feae98d61ae.jpeg',
-            logo: 'https://cdn.jsdelivr.net/gh/simizeko/report-assets@main/images/UpAcreStackedRGB.png',
+            defaultHeader: 'https://cdn.jsdelivr.net/gh/simizeko/ua-report@main/placeholder/photo-1471289660181-7feae98d61ae.jpeg',
+            logo: 'https://cdn.jsdelivr.net/gh/simizeko/ua-report@main/placeholder/up-acre-stacked-positive-RGB.png',
+            logoBlack: 'https://cdn.jsdelivr.net/gh/simizeko/ua-report@main/placeholder/up-acre-stacked-black-RGB.png',
             signature: 'https://cdn.jsdelivr.net/gh/simizeko/ua-report@main/placeholder/signature.png',
             projectPartnerLogo: 'https://cdn.jsdelivr.net/gh/simizeko/ua-report@main/placeholder/biofarmLogo.png'
         },
@@ -93,6 +94,7 @@ function UpdateDoc() {
                 style: 'folio',
                 columns: [
                     { text: 'upacre.co.uk', alignment: 'left', width: '*' },
+                    { image: 'logoBlack', width: 50, alignment: 'center' },
                     { text: currentPage + ' of ' + pageCount, alignment: 'right', width: '*' }
                 ]
             }
