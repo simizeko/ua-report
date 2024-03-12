@@ -176,27 +176,17 @@ function LineTable(values, total) {
         table: {
             headerRows: 0,
             widths: ['auto', '*'],
-            // heights: function (row) {
-            // 	return (row + 1)+20;
-            // },
             body: LoopValues()
         }
     }
-    // print(values);
     return l;
 
     function LoopValues() {
         let rows = [];
         for (let i = 0; i < values.length; i += 2) {
             let r = [{ bold: true, text: values[i] }, { text: values[i + 1] }]
-            // let c1 = [{ bold: true, text: values[i] }];
-            // let c2 = [{ text: values[i + 1] }];
-            // c1.push(c2);
-            // print(c1);
-            // rows.push(c1);
             rows.push(r);
         }
-        // print(c1);
         return rows;
     }
 }
@@ -278,7 +268,10 @@ function TwoColumn(column1, column2, color, total) {
             headerRows: 0,
             widths: [columnWidth, secondWidth],
             body: [
-                [{ fillColor: fColour, color: colour, bold: true, alignment: 'center', lineHeight: 1, text: column1 }, { bold: boldText, fillColor: lightGray, text: column2 }]
+                [
+                    { fillColor: fColour, color: colour, bold: true, alignment: 'center', lineHeight: 1, text: column1 },
+                    { bold: boldText, fillColor: lightGray, lineHeight: 1, text: column2 }
+                ]
                 // [{ fillColor: '#CCCCCC', bold: true, text: 'Report' }, {fillColor: '#d1d1d1', text:'Desk survey and ecological forecasting'}],
             ]
         },
@@ -307,7 +300,7 @@ function TwoColumn(column1, column2, color, total) {
             },
             paddingBottom: function paddingBottom(i, node) {
                 //   return i === node.table.widths.length - 1 ? 0 : 8;
-                return pad / 2;
+                return pad;
             }
         }
     }
@@ -536,44 +529,34 @@ function DeleteElements(...selector) {
             v[j].remove();
         }
     }
-
-    // let selectors = [];
-    // selectors.push(selector1, selector2, selector3)
-
-    // for (let i = 0; i < selectors.length; i++) {
-    //     let v = selectAll(selectors[i]);
-    //     for (let j = 0; j < v.length; j++) {
-    //         v[j].remove();
-    //     }
-    // }
 }
 
-/// MOVE ERROR CHECK SO IT CAN BE PASSED A CATEGORY IN THE IMAGEUPLOAD FUNCTION
-function ErrorCheck() {
-    // console.log(uploadedImages['partner-logo0']);
-    if (!uploadedImages['partner-logo0']) {
-        let e = select('#partner-logoError');
-        e.html('Please upload a project partner logo');
-        console.log('ERROR');
-        errors.push('partner-logoImage');
-    } else{
-        let indexNumber = errors.indexOf('partner-logoImage');
-        errors.splice(indexNumber, 1);
+function RequiredCheck() {
+    let req = document.getElementsByClassName('requiredInput');
+    for (let i = 0; i < req.length; i++) {
+        let label = req[i].parentNode.childNodes[0];
+        if (req[i].files.length == 0) {
+            errors.push('File Required' + i);
+            label.style.color = "red";
+        } else {
+            //// Replaces array with array that does not contain any specified string
+            errors = errors.filter(a => a !== 'File Required' + i);
+            // errors.splice('File Required' + i);
+            label.style.color = "black";
+        }
     }
 }
 
 function CreateDocument() {
     UpdateDoc();
-    // ErrorCheck();
-    console.log(errors);
+    RequiredCheck();
+    // console.log(errors);
     //// What is the best way of checking for errors here?
     //// Create an array where errors are sent which is checked?
-    if (errors.length < 1) {
+    if (errors.length == 0) {
+        console.log('Errors detected:', errors.length);
         pdfMake.createPdf(docDefinition).open();
+    } else {
+        console.log('ERRORS:', errors);
     }
 }
-
-// function AutoGenerate() {
-//     UpdateDoc();
-//     pdfMake.createPdf(docDefinition).open();
-// }

@@ -18,9 +18,7 @@ let worksheets = {};
 let client = {}
 let sheets;
 let selection;
-// let images = { plot1: null, plot2: null, habitat1: null, habitat2: null };
 let uploadedImages = {};
-// let showImage = { plot0: false, plot1: false, habitat0: false, habitat1: false };
 let showImage = {};
 let errors = [];
 
@@ -42,23 +40,7 @@ let container;
 let infoContainer;
 let baseMargin = '40px'
 
-//// Input variables
-// let container;
-// let LPA = { q: 'Land Planning Authority:', id: 'lpa', a: '' };
-// let postcode = { q: "Postcode:", id: "pc", a: '' };
-// let accountManager = { q: "Account Manager:", id: "am", a: '' };
-// let projectPartner = { q: "Project Partner:", id: 'pPartner', a: '' };
-// let landOwner = { q: "Land Owner:", id: "lo", a: '' };
-// let acreage = { q: "Acreage:", id: "acres", a: '' };
-// let acquisitionOfLand = { q: "Acquisition of Land:", id: "aol", a: '' };
-// let yearOfAcquisition = { q: "Year of Acquisition:", id: "yoa", a: '' };
-// let currentLandUse = { q: "Current Land Use:", id: "clu", a: '' };
-// let reasonForDiversification = { q: "Reason For Diversification:", id: "rfd", a: '' };
-// let proposedProject = { q: "Proposed Project:", id: "pp", a: '' };
-// let income = { q: "Income:", id: "income", a: "" };
-// let expenditure = { q: "Expenditure:", id: "exp", a: "" };
-// let landOwnerIncome = { q: "Land Owner Income:", id: "loi", a: "" };
-
+//// Set default fonts
 pdfMake.fonts = {
     helvetica: {
         normal: 'HelveticaNeue.ttf',
@@ -67,6 +49,8 @@ pdfMake.fonts = {
     }
 };
 
+
+//// Creates and updates document object
 function UpdateDoc() {
     docDefinition = {
         pageSize: {
@@ -94,7 +78,6 @@ function UpdateDoc() {
                 return;
             } else {
                 return {
-                    // absolutePosition: { x: 0, y: vh / 2 },
                     width: vw,
                     style: 'folio',
                     columns: [
@@ -108,7 +91,6 @@ function UpdateDoc() {
         content: [
             /////////////////////////////
             // PAGE 1
-            // HeaderImage(),
             {
                 image: 'logo',
                 width: 120,
@@ -240,8 +222,6 @@ function UpdateDoc() {
             DisplayImage('habitat0', 'habitat1'),
             {
                 columns: [
-                    // [h4("{{Neutral Grassland}}", orange.t100), BodyColumn("{{Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ultricies hendrerit massa, sed tincidunt nisi tempus eu. Etiam rhoncus tempor enim, nec gravida ligula ultricies ut. Curabitur tincidunt ante non tortor scelerisque, non convallis ex congue. Mauris vestibulum dui risus, eu mollis sapien interdum ac.}}")],
-                    // [h4("{{Wild Flowers}}", orange.t100), BodyColumn("{{Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ultricies hendrerit massa, sed tincidunt nisi tempus eu. Etiam rhoncus tempor enim, nec gravida ligula ultricies ut. Curabitur tincidunt ante non tortor scelerisque, non convallis ex congue. Mauris vestibulum dui risus, eu mollis sapien interdum ac.}}")]
                     h4body("{{Neutral Grassland}}", "{{Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ultricies hendrerit massa, sed tincidunt nisi tempus eu. Etiam rhoncus tempor enim, nec gravida ligula ultricies ut. Curabitur tincidunt ante non tortor scelerisque, non convallis ex congue. Mauris vestibulum dui risus, eu mollis sapien interdum ac.}}"),
                     h4body("{{Wild Flowers}}", "{{Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ultricies hendrerit massa, sed tincidunt nisi tempus eu. Etiam rhoncus tempor enim, nec gravida ligula ultricies ut. Curabitur tincidunt ante non tortor scelerisque, non convallis ex congue. Mauris vestibulum dui risus, eu mollis sapien interdum ac.}}")
                 ]
@@ -314,7 +294,6 @@ function UpdateDoc() {
                 "60% Split of Sales", client.loCut,
                 "Hurdle Rate", client.hurdleRate
             ]),
-            // TwoColumn("Total Net Income for the Landowner", "{{landowner income}}",null, 'TOTAL')
             FillTable(["Total Net Income for the Landowner", client.loIncome], true),
             BodySmall("Please note the above sum is an estimation and could be subject to change."),
             PageBreak(),
@@ -384,7 +363,6 @@ function UpdateDoc() {
                 // color: orange,
                 lineHeight: 1,
                 margin: [0, (headerDepth - 5), 0, gap]
-                // margin: [0, 0, 0, gap]
             },
             h1: {
                 fontSize: 28,
@@ -431,15 +409,6 @@ function UpdateDoc() {
             columnGap: colGap
         }
     }
-
-    // //// Add the plot image to the docDefinition object
-    // if (showImage.plot0) {
-    //     docDefinition.images.plot0 = images.plot0;
-    // }
-    // if (showImage.plot1) {
-    //     docDefinition.images.plot1 = images.plot1;
-    // }
-
 }
 
 
@@ -483,11 +452,6 @@ function setup() {
     pageTitle('Report Prototype');
     createP('Please upload the spreadsheet as an .xlsx').parent(container);
 
-    // Find the input in the html and parent to container div
-    // let upload = select("#file");
-    // upload.parent(container);
-    // let upload = createFileInput().id('file');
-    // upload.parent(container);
 
     let upload = document.createElement('INPUT');
     upload.setAttribute("type", "file");
@@ -504,7 +468,6 @@ function pageTitle(text) {
     t.style('font-family', 'sans-serif');
     t.style('margin-top', '0px');
     t.style('margin-bottom', baseMargin);
-    // t.style('width', '100%');
 }
 
 function Init() {
@@ -527,21 +490,12 @@ function Init() {
                     worksheets[element] = XLSX.utils.sheet_to_json(workbook.Sheets[element]);
 
                 }
-                // console.log("JSON\n", JSON.stringify(worksheets), "\n\n");
-                // console.log(worksheets[sheets[0]][4])
-                // console.log(worksheets[sheets[3]][0].LPA)
-                // console.log(worksheets[sheets[0]][0]["Client Number "]);
 
-                // Populate a list of client numbers
+                //// Populate a list of client numbers
                 for (let i = 0; i < worksheets[sheets[0]].length; i++) {
                     let l = worksheets[sheets[0]][i]["Client Number "];
                     clientList.push(l);
                 }
-
-
-                // if (clientList.length < 0) {
-                //     createP('Please upload a valid .xlsx spreadsheet').parent(container).addClass('Body');
-                // }
 
                 ClientDropDown(clientList)
                 Styles();
@@ -650,17 +604,16 @@ function UpdateClient() {
         }
     }
 
-    ImageUpload('partner-logo', 1, '#e6e6e6')
+    ImageUpload('partner-logo', 1, '#e6e6e6', true);
     ImageUpload('habitat', 2, '#e6e6e6');
     ImageUpload('plot', 2, '#d9d9d9');
     SubmitButton('Create Report PDF');
     ClientDisplay();
-    // UpdateData();
     Styles();
 }
 
 
-function ImageUpload(category, numberOfInputs, color) {
+function ImageUpload(category, numberOfInputs, color, required) {
 
     function CategoryId(text) {
         let string = '#' + category + text;
@@ -676,28 +629,33 @@ function ImageUpload(category, numberOfInputs, color) {
     imageUploadContainer.style('margin-left', '-' + baseMargin);
     imageUploadContainer.style('margin-right', '-' + baseMargin);
     imageUploadContainer.style('padding', baseMargin);
-    // imageUploadContainer.style('padding-top', '20px');
-    // imageUploadContainer.style('padding-bottom', '20px');
-    // imageUploadContainer.style('display', 'inline');
 
     let containerId = select(CategoryId('UploadContainer'));
-    // imageUploadContainer.style('float', 'left');
 
     let label = ' images (optional)';
     if (numberOfInputs == 1) {
         label = ' .jpeg or .png'
     }
     let l = createP('Upload ' + category + label).style('margin-top', '0px').parent(containerId).id(category + 'Text');
-    let e = createP('').parent(l).style('color: red').id(category + 'Error');
+    if (required) {
+        l.html(' (required)', true);
+    }
 
-    // let imgUpload = createFileInput(HandleImage).id('plotImage');
-    // imgUpload.parent(container);
+    let e = [];
+
+    for (let i = 0; i < numberOfInputs; i++) {
+        e[i] = createP('').parent(l).style('color: red').id(category + 'Error' + i);
+    }
 
     for (let i = 0; i < numberOfInputs; i++) {
         let imgUpload = document.createElement('INPUT');
         imgUpload.setAttribute("type", "file");
         imgUpload.setAttribute('id', category + 'File' + i);
         document.getElementById(category + 'UploadContainer').appendChild(imgUpload);
+
+        if (required) {
+            imgUpload.setAttribute('class', 'requiredInput');
+        }
 
         let uploaded = document.getElementById(category + 'File' + i);
         uploaded.addEventListener("change", function (e) {
@@ -716,56 +674,29 @@ function ImageUpload(category, numberOfInputs, color) {
 
     function HandleImage(file, index) {
         DeleteElements(CategoryId('Image') + index);
+        if (required) {
+            RequiredCheck();
+        }
         if (file.type === 'image/jpeg' || file.type === 'image/png') {
-            // let thumbnail = createImg(file.data, '');
             let thumbnail = createImg(uploadedImages[category + index], '').id(category + 'Image' + index);
             thumbnail.parent(l);
             thumbnail.style('width', '200px');
             thumbnail.style('display', 'inline');
-            // thumbnail.style('margin-top', '20px');
             thumbnail.style('margin-right: 20px');
 
+            e[index].html('');
 
-            // const preview = document.querySelector("img");
-            // const f = document.querySelector("input[type=file]").files[0];
-            // // const f = imgUpload.value().blob();
-            // const reader = new FileReader();
+            //// Replaces array with array that does not contain any specified string
+            errors = errors.filter(a => a !== category + 'Image' + index);
 
-            // reader.addEventListener(
-            //     "load",
-            //     () => {
-            //         // convert image file to base64 string
-            //         preview.src = reader.result;
-            //     },
-            //     false,
-            // );
-
-            // if (f) {
-            //     plotImage = reader.readAsDataURL(f);
-            // }
-
-            e.html('');
-            // select('#submitButton').style('visibility: visible');
-            // showPlotImage['value' + index] = true;
-            // showImage[category + index] = true;
-
-            //// Add the image to the docDefinition object
-            // docDefinition.images = {}; // Need to initialise the property, cannot set undefined
-            // docDefinition.images[category + index] = images[category + index];
-
-            let indexNumber = errors.indexOf(category + 'Image');
-            if (indexNumber > -1) { // only splice array when item is found
-                errors.splice(indexNumber, 1); // 2nd parameter means remove one item only
-            }
-            errors.splice
         } else {
             // pic = null;
-            e.html('Please upload a valid ' + category + ' .jpeg or .png file');
+            e[index].html(category + ' image ' + (index + 1) + ': ' + 'Please upload a valid .jpeg or .png file');
             // select('#submitButton').style('visibility: hidden');
             // showPlotImage['value' + index] = false;
             // showImage[category + index] = false;
-            errors.push(category + 'Image');
-            console.log(errors)
+            errors.push(category + 'Image' + index);
+            // console.log(errors)
         }
     }
 }
